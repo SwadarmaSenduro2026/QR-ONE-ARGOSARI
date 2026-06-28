@@ -1,0 +1,9 @@
+<svg width="160" height="160" viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="160" height="160" rx="40" fill="#FFFFFF"/>
+  <circle cx="80" cy="80" r="58" fill="#EAF4FF" stroke="#1E88E5" stroke-width="5"/>
+  <path d="M34 64L80 40L126 64L80 88L34 64Z" fill="#1565C0"/>
+  <path d="M54 80V105C65 118 96 118 107 105V80L80 94L54 80Z" fill="#2E7D32"/>
+  <path d="M119 66V97" stroke="#1565C0" stroke-width="7" stroke-linecap="round"/>
+  <circle cx="119" cy="104" r="7" fill="#F9A825"/>
+  <text x="80" y="148" text-anchor="middle" font-family="Arial" font-weight="700" font-size="17" fill="#1565C0">KAMPUS</text>
+</svg>

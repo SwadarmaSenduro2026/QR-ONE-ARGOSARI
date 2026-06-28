@@ -1,0 +1,1410 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>QR-One Argosari</title>
+  <meta name="description" content="Portal akses cepat informasi Desa Argosari berbasis QR Code." />
+  <meta name="theme-color" content="#174c2f" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --green-900: #0c2d1d;
+      --green-800: #174c2f;
+      --green-700: #1f6b3d;
+      --green-100: #eaf6ea;
+      --cream: #fff9ec;
+      --text: #122117;
+      --muted: #5f6f65;
+      --line: rgba(23, 76, 47, 0.16);
+      --shadow: 0 20px 50px rgba(12, 45, 29, 0.10);
+      --radius-lg: 28px;
+      --radius-md: 18px;
+      --container: 1120px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 86px;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 10% 0%, rgba(56, 150, 85, 0.14), transparent 30%),
+        linear-gradient(180deg, #f7fff5 0%, #fff9ec 46%, #f9f4e8 100%);
+      line-height: 1.6;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .skip-link {
+      position: absolute;
+      left: -999px;
+      top: 10px;
+      z-index: 20;
+      background: white;
+      padding: 10px 14px;
+      border-radius: 10px;
+    }
+
+    .skip-link:focus {
+      left: 10px;
+    }
+
+    .container {
+      width: min(100% - 36px, var(--container));
+      margin-inline: auto;
+    }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .topbar {
+      width: min(100% - 36px, 1200px);
+      margin-inline: auto;
+      min-height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      font-weight: 900;
+      font-size: 18px;
+      color: var(--green-900);
+    }
+
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: inline-grid;
+      place-items: center;
+      color: white;
+      background: linear-gradient(135deg, #1f8f4c, #f2c94c);
+      font-weight: 900;
+      box-shadow: 0 10px 20px rgba(31, 107, 61, 0.18);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-actions a {
+      text-decoration: none;
+      font-weight: 750;
+      color: var(--green-800);
+      padding: 8px 12px;
+      border-radius: 999px;
+    }
+
+    .nav-actions a:hover,
+    .nav-actions a:focus {
+      background: var(--green-100);
+    }
+
+    .section-pad {
+      padding: 64px 0 34px;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0 0;
+      height: 160px;
+      background:
+        radial-gradient(120px 90px at 12% 80%, rgba(31, 107, 61, 0.20), transparent 70%),
+        radial-gradient(180px 120px at 92% 84%, rgba(31, 107, 61, 0.18), transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-grid {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1.08fr 0.92fr;
+      gap: 28px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      margin: 0 0 10px;
+      font-size: 13px;
+      letter-spacing: 0.18em;
+      font-weight: 900;
+      color: var(--green-700);
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      margin-bottom: 12px;
+      font-size: clamp(42px, 6.4vw, 80px);
+      line-height: 0.98;
+      letter-spacing: -0.065em;
+      color: var(--green-900);
+    }
+
+    h2 {
+      margin-bottom: 10px;
+      font-size: clamp(27px, 3vw, 42px);
+      line-height: 1.08;
+      letter-spacing: -0.04em;
+    }
+
+    h3 {
+      margin-bottom: 6px;
+      font-size: 20px;
+      line-height: 1.22;
+    }
+
+    .hero-subtitle {
+      max-width: 660px;
+      margin-bottom: 18px;
+      font-size: clamp(18px, 2.4vw, 26px);
+      color: var(--muted);
+    }
+
+    .partner-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 22px;
+    }
+
+    .partner-card {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-weight: 850;
+      box-shadow: 0 12px 30px rgba(12, 45, 29, 0.08);
+    }
+
+    .partner-logo {
+      width: 30px;
+      height: 30px;
+      display: inline-grid;
+      place-items: center;
+      border-radius: 999px;
+      background: var(--green-100);
+      color: var(--green-800);
+      font-size: 12px;
+      font-weight: 950;
+    }
+
+    .primary-cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .primary-cta,
+    .secondary-cta,
+    .form-button,
+    .detail-button {
+      display: inline-flex;
+      min-height: 50px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      padding: 12px 20px;
+      text-decoration: none;
+      font-weight: 900;
+    }
+
+    .primary-cta,
+    .form-button,
+    .detail-button.primary {
+      background: var(--green-700);
+      color: white;
+      box-shadow: 0 14px 28px rgba(31, 107, 61, 0.22);
+    }
+
+    .secondary-cta,
+    .detail-button.secondary {
+      background: white;
+      border: 1px solid var(--line);
+      color: var(--green-800);
+    }
+
+    .detail-button.danger {
+      background: #b42318;
+      color: white;
+      box-shadow: 0 14px 28px rgba(180, 35, 24, 0.18);
+    }
+
+    .hero-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.90), rgba(234, 246, 234, 0.72)),
+        radial-gradient(circle at 100% 0%, rgba(242, 201, 76, 0.28), transparent 40%);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-card-icon {
+      width: 70px;
+      height: 70px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 18px;
+      border-radius: 22px;
+      background: white;
+      font-size: 34px;
+    }
+
+    .hero-card p {
+      color: var(--muted);
+    }
+
+    .mini-stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .mini-stats span {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 7px 10px;
+      background: rgba(255,255,255,0.78);
+      font-size: 13px;
+      font-weight: 850;
+      color: var(--green-800);
+    }
+
+    .notice {
+      margin-top: 12px;
+      margin-bottom: 20px;
+      padding: 16px 18px;
+      border-radius: 18px;
+      border: 1px solid rgba(242, 201, 76, 0.45);
+      background: rgba(255, 245, 216, 0.76);
+      color: #5d4315;
+      font-weight: 750;
+    }
+
+    .search-section {
+      margin-bottom: 34px;
+      padding: 18px;
+      background: rgba(255, 255, 255, 0.78);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      box-shadow: 0 14px 32px rgba(12, 45, 29, 0.06);
+    }
+
+    .search-section label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 900;
+      color: var(--green-900);
+    }
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 54px;
+      padding-inline: 15px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: white;
+    }
+
+    .search-box input {
+      width: 100%;
+      border: 0;
+      outline: none;
+      font: inherit;
+      background: transparent;
+    }
+
+    .main-menu,
+    .detail-section,
+    .map-section,
+    .update-section {
+      margin-bottom: 34px;
+    }
+
+    .section-head {
+      max-width: 720px;
+      margin-bottom: 18px;
+    }
+
+    .section-head p:not(.eyebrow),
+    .map-copy p:not(.eyebrow),
+    .update-section p:not(.eyebrow),
+    .detail-main p {
+      color: var(--muted);
+    }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .menu-card {
+      position: relative;
+      display: flex;
+      min-height: 140px;
+      gap: 14px;
+      align-items: flex-start;
+      padding: 20px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.86);
+      text-decoration: none;
+      box-shadow: 0 14px 30px rgba(12, 45, 29, 0.06);
+      transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+    }
+
+    .menu-card:hover,
+    .menu-card:focus {
+      transform: translateY(-2px);
+      border-color: rgba(31, 107, 61, 0.42);
+      box-shadow: 0 18px 40px rgba(12, 45, 29, 0.10);
+    }
+
+    .menu-card.is-active {
+      border-color: rgba(31, 107, 61, 0.55);
+      background: rgba(234, 246, 234, 0.92);
+    }
+
+    .menu-card .icon {
+      width: 52px;
+      height: 52px;
+      flex: 0 0 auto;
+      display: grid;
+      place-items: center;
+      border-radius: 16px;
+      background: var(--green-100);
+      font-size: 28px;
+    }
+
+    .menu-card h3 {
+      margin-bottom: 4px;
+    }
+
+    .menu-card p {
+      margin-bottom: 10px;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .menu-card .status {
+      display: inline-flex;
+      border-radius: 999px;
+      padding: 5px 9px;
+      background: var(--green-100);
+      color: var(--green-800);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .menu-card .arrow {
+      position: absolute;
+      right: 16px;
+      bottom: 14px;
+      color: var(--green-800);
+      font-size: 24px;
+      line-height: 1;
+    }
+
+    .empty-state {
+      padding: 18px;
+      border: 1px dashed var(--line);
+      border-radius: 18px;
+      background: rgba(255,255,255,0.72);
+      color: var(--muted);
+    }
+
+    .detail-section {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      background: rgba(255,255,255,0.82);
+      box-shadow: 0 14px 36px rgba(12,45,29,0.07);
+    }
+
+    .detail-shell {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 18px;
+      align-items: start;
+      margin-bottom: 18px;
+    }
+
+    .detail-main h2 {
+      margin-bottom: 8px;
+    }
+
+    .detail-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .detail-content {
+      display: grid;
+      gap: 14px;
+    }
+
+    .detail-highlight {
+      padding: 16px 18px;
+      border-radius: 18px;
+      background: rgba(234, 246, 234, 0.82);
+      border: 1px solid var(--line);
+    }
+
+    .detail-highlight ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    .detail-highlight li + li {
+      margin-top: 6px;
+    }
+
+    .detail-card-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .detail-card {
+      padding: 18px;
+      border-radius: 18px;
+      background: #fff;
+      border: 1px solid var(--line);
+    }
+
+    .detail-card p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .map-section {
+      display: grid;
+      grid-template-columns: 0.72fr 1.28fr;
+      gap: 18px;
+      align-items: stretch;
+      padding: 22px;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.74);
+    }
+
+    .map-placeholder {
+      min-height: 320px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      border-radius: 22px;
+      background:
+        linear-gradient(135deg, rgba(234, 246, 234, 0.8), rgba(255, 245, 216, 0.72)),
+        repeating-linear-gradient(45deg, rgba(31,107,61,0.06), rgba(31,107,61,0.06) 10px, transparent 10px, transparent 22px);
+      border: 1px dashed rgba(31, 107, 61, 0.30);
+      padding: 24px;
+    }
+
+    .map-icon {
+      display: block;
+      font-size: 46px;
+      margin-bottom: 8px;
+    }
+
+    .update-section {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 18px;
+      align-items: center;
+      padding: 24px;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--line);
+      background: white;
+      box-shadow: 0 14px 36px rgba(12,45,29,0.07);
+    }
+
+    .update-section p:not(.eyebrow) {
+      margin: 0;
+    }
+
+    .form-button[aria-disabled="true"] {
+      opacity: 0.78;
+      background: #728176;
+      pointer-events: none;
+    }
+
+    .qr-footer {
+      margin-top: 56px;
+      background:
+        radial-gradient(circle at 25% 12%, rgba(255, 255, 255, 0.12), transparent 28%),
+        linear-gradient(135deg, #315f28, #7da342);
+      color: #ffffff;
+      text-align: center;
+      padding: 54px 20px 42px;
+    }
+
+    .qr-footer-inner {
+      width: min(100% - 32px, 860px);
+      margin: 0 auto;
+    }
+
+    .qr-footer-logos {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 26px;
+    }
+
+    .qr-footer-logo {
+      width: 58px;
+      height: 58px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255, 255, 255, 0.55);
+      background: rgba(255, 255, 255, 0.12);
+      color: #ffffff;
+      font-weight: 900;
+      font-size: 14px;
+    }
+
+    .qr-footer-description {
+      max-width: 780px;
+      margin: 0 auto 24px;
+      font-size: 18px;
+      line-height: 1.65;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.95);
+    }
+
+    .qr-footer-socials {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .qr-footer-socials a {
+      width: 46px;
+      height: 46px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      text-decoration: none;
+      color: #10240f;
+      font-size: 22px;
+      background: rgba(255, 255, 255, 0.18);
+      border: 1.5px solid rgba(255, 255, 255, 0.22);
+    }
+
+    .qr-footer-line {
+      width: min(100%, 640px);
+      height: 1px;
+      margin: 0 auto 18px;
+      background: rgba(255, 255, 255, 0.32);
+    }
+
+    .qr-footer-copy {
+      margin: 0;
+      font-size: 16px;
+      line-height: 1.5;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.94);
+    }
+
+    @media (max-width: 900px) {
+      .hero-grid,
+      .map-section,
+      .update-section,
+      .detail-shell {
+        grid-template-columns: 1fr;
+      }
+
+      .menu-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .detail-actions {
+        justify-content: flex-start;
+      }
+
+      .update-section .form-button {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 640px) {
+      html {
+        scroll-padding-top: 76px;
+      }
+
+      .container,
+      .topbar {
+        width: min(100% - 28px, var(--container));
+      }
+
+      .topbar {
+        min-height: 64px;
+      }
+
+      .brand {
+        font-size: 16px;
+      }
+
+      .brand-mark {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+      }
+
+      .nav-actions {
+        gap: 2px;
+      }
+
+      .nav-actions a {
+        font-size: 13px;
+        padding: 6px 8px;
+      }
+
+      .section-pad {
+        padding: 42px 0 22px;
+      }
+
+      h1 {
+        font-size: clamp(42px, 13vw, 56px);
+      }
+
+      h2 {
+        font-size: 27px;
+      }
+
+      .hero-subtitle {
+        font-size: 18px;
+      }
+
+      .hero-card,
+      .detail-section {
+        padding: 20px;
+      }
+
+      .partner-card {
+        font-size: 14px;
+      }
+
+      .primary-cta-row {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+
+      .primary-cta,
+      .secondary-cta {
+        width: 100%;
+      }
+
+      .notice,
+      .search-section,
+      .map-section,
+      .update-section,
+      .detail-section {
+        border-radius: 20px;
+      }
+
+      .menu-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      .menu-card {
+        min-height: auto;
+        padding: 16px 52px 16px 16px;
+        align-items: center;
+      }
+
+      .menu-card .icon {
+        width: 48px;
+        height: 48px;
+        font-size: 25px;
+      }
+
+      .menu-card p,
+      .menu-card .status {
+        display: none;
+      }
+
+      .menu-card .arrow {
+        right: 16px;
+        top: 50%;
+        bottom: auto;
+        transform: translateY(-50%);
+      }
+
+      .detail-card-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .detail-actions {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+
+      .detail-button {
+        width: 100%;
+      }
+
+      .map-placeholder {
+        min-height: 240px;
+      }
+
+      .update-section {
+        padding: 20px;
+      }
+
+      .qr-footer {
+        margin-top: 40px;
+        padding: 42px 16px 34px;
+      }
+
+      .qr-footer-inner {
+        width: min(100% - 20px, 520px);
+      }
+
+      .qr-footer-logos {
+        gap: 14px;
+        margin-bottom: 22px;
+      }
+
+      .qr-footer-logo {
+        width: 50px;
+        height: 50px;
+        font-size: 12px;
+      }
+
+      .qr-footer-description {
+        max-width: 340px;
+        font-size: 15px;
+        line-height: 1.7;
+        margin-bottom: 22px;
+      }
+
+      .qr-footer-socials {
+        gap: 12px;
+        margin-bottom: 22px;
+      }
+
+      .qr-footer-socials a {
+        width: 42px;
+        height: 42px;
+        font-size: 20px;
+      }
+
+      .qr-footer-line {
+        width: min(100%, 320px);
+        margin-bottom: 16px;
+      }
+
+      .qr-footer-copy {
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <a class="skip-link" href="#menu-utama">Lewati ke menu utama</a>
+
+  <header class="site-header">
+    <nav class="topbar" aria-label="Navigasi utama">
+      <a class="brand" href="#home" aria-label="Kembali ke beranda QR-One Argosari">
+        <span class="brand-mark" id="navLogoText" aria-hidden="true">Q1</span>
+        <span id="navTitle">QR-One Argosari</span>
+      </a>
+
+      <div class="nav-actions" aria-label="Menu cepat">
+        <a href="#menu-utama">Menu</a>
+        <a href="#peta">Peta</a>
+        <a href="#update">Update</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="home">
+    <section class="hero section-pad" aria-labelledby="siteTitle">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow">PORTAL INFORMASI DESA</p>
+
+          <h1 id="siteTitle">QR-One Argosari</h1>
+
+          <p class="hero-subtitle">
+            Satu QR untuk akses informasi Desa Argosari.
+          </p>
+
+          <div class="partner-row" aria-label="Logo dan identitas pendukung">
+            <div class="partner-card">
+              <span class="partner-logo" aria-hidden="true">KKN</span>
+              <span>KKN</span>
+            </div>
+
+            <div class="partner-card">
+              <span class="partner-logo" aria-hidden="true">🏛️</span>
+              <span>Kampus</span>
+            </div>
+          </div>
+
+          <div class="primary-cta-row">
+            <a class="primary-cta" href="#menu-utama">Pilih Informasi</a>
+            <a class="secondary-cta" href="#detail-peta-desa">Lihat Peta</a>
+          </div>
+        </div>
+
+        <aside class="hero-card" aria-label="Ringkasan fungsi QR-One">
+          <div class="hero-card-icon" aria-hidden="true">📍</div>
+
+          <h2>Informasi satu pintu </h2>
+
+          <p>
+            Memudahkan warga dan pengunjung mengakses informasi penting Desa Argosari.
+          </p>
+
+          <div class="mini-stats" aria-label="Kategori utama">
+            <span>Desa</span>
+            <span>Wisata</span>
+            <span>Darurat</span>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="container notice" aria-label="Catatan penggunaan">
+      Pilih menu di bawah ini.
+    </section>
+
+    <section class="container search-section" aria-label="Pencarian cepat">
+      <label for="searchInput">Cari cepat</label>
+
+      <div class="search-box">
+        <span aria-hidden="true">🔎</span>
+        <input
+          id="searchInput"
+          type="search"
+          placeholder="Cari peta, wisata, fasilitas, darurat..."
+          autocomplete="off"
+        />
+      </div>
+    </section>
+
+    <section class="container main-menu" id="menu-utama" aria-labelledby="menuTitle">
+      <div class="section-head">
+        <p class="eyebrow">AKSES CEPAT</p>
+
+        <h2 id="menuTitle">Menu utama QR-One</h2>
+
+        <p>
+          Klik salah satu menu. Detail akan muncul langsung di halaman ini agar pengguna tidak perlu berpindah banyak tab.
+        </p>
+      </div>
+
+      <div id="menuGrid" class="menu-grid" aria-live="polite"></div>
+
+      <p id="emptyState" class="empty-state" hidden>
+        Tidak ada menu yang cocok dengan pencarian.
+      </p>
+    </section>
+
+    <section class="container detail-section" id="detail" aria-labelledby="detailTitle">
+      <div class="detail-shell">
+        <div class="detail-main">
+          <p class="eyebrow" id="detailEyebrow">DETAIL INFORMASI</p>
+          <h2 id="detailTitle">Pilih menu untuk melihat detail</h2>
+          <p id="detailIntro">
+            Detail akan muncul di sini setelah pengguna memilih salah satu menu utama.
+          </p>
+        </div>
+
+        <div id="detailActions" class="detail-actions"></div>
+      </div>
+
+      <div id="detailContent" class="detail-content"></div>
+    </section>
+
+    <section class="container map-section" id="peta" aria-labelledby="mapTitle">
+      <div class="map-copy">
+        <p class="eyebrow">PETA</p>
+
+        <h2 id="mapTitle">Peta Desa & lokasi penting</h2>
+
+        <p>
+          Bagian ini masih dummy. Nanti bisa diganti menjadi Google My Maps embed atau peta Leaflet/OpenStreetMap.
+        </p>
+      </div>
+
+      <div class="map-placeholder" role="img" aria-label="Placeholder peta QR-One Argosari">
+        <div>
+          <span class="map-icon" aria-hidden="true">🗺️</span>
+
+          <h3>Area peta interaktif</h3>
+
+          <p>
+            Titik wisata, fasilitas umum, UMKM, titik kumpul, dan jalur evakuasi bisa ditampilkan di sini setelah data lokasi siap.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="container update-section" id="update" aria-labelledby="formTitle">
+      <div>
+        <p class="eyebrow">PEMBARUAN DATA</p>
+
+        <h2 id="formTitle">Kirim data atau koreksi informasi</h2>
+
+        <p>
+          Gunakan satu form untuk mengirim data baru, koreksi informasi desa, UMKM, wisata, fasilitas umum, atau laporan pembaruan.
+        </p>
+      </div>
+
+      <a class="form-button" href="#" aria-disabled="true">
+        Form belum aktif
+      </a>
+    </section>
+  </main>
+
+  <footer class="qr-footer">
+    <div class="qr-footer-inner">
+      <div class="qr-footer-logos" aria-label="Logo QR-One dan KKN">
+        <div class="qr-footer-logo">Q1</div>
+        <div class="qr-footer-logo">KKN</div>
+      </div>
+
+      <p class="qr-footer-description">
+        QR-One Argosari dibuat untuk memudahkan masyarakat dan pengunjung mengakses
+        informasi desa, lokasi penting, wisata, fasilitas umum, dan informasi darurat
+        secara cepat melalui satu QR Code.
+      </p>
+
+      <div class="qr-footer-socials" aria-label="Kontak dan media sosial">
+        <a href="#" aria-label="Instagram QR-One">◎</a>
+        <a href="#" aria-label="TikTok QR-One">♫</a>
+        <a href="#" aria-label="Email QR-One">✉</a>
+      </div>
+
+      <div class="qr-footer-line"></div>
+
+      <p class="qr-footer-copy">
+        © KKN-PPM UGM Swadarma Senduro Sub-Unit Argosari 2026
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    const MENU_ITEMS = [
+      {
+        id: "peta-desa",
+        title: "Peta Desa & Lokasi Penting",
+        shortTitle: "Peta Desa",
+        icon: "🗺️",
+        description: "Akses peta desa, lokasi wisata, fasilitas umum, dan titik penting.",
+        status: "Prioritas utama",
+        detail: {
+          eyebrow: "PETA DESA",
+          title: "Peta Desa & Lokasi Penting",
+          intro: "Bagian ini disiapkan sebagai pusat navigasi lokasi penting di Desa Argosari. Untuk tahap dummy, peta belum aktif dan data masih contoh.",
+          highlights: [
+            "Peta wilayah dan akses Desa Argosari",
+            "Titik wisata seperti B29",
+            "Fasilitas umum dan lokasi layanan",
+            "Titik kumpul dan jalur evakuasi setelah validasi"
+          ],
+          cards: [
+            {
+              title: "Peta interaktif",
+              text: "Nanti dapat memakai Google My Maps atau Leaflet agar titik lokasi tampil langsung di website."
+            },
+            {
+              title: "Kategori titik",
+              text: "Wisata, fasilitas umum, UMKM, mitigasi, parkir, dan kantor desa bisa dibedakan dengan ikon/warna."
+            }
+          ],
+          actions: [
+            { label: "Lihat area peta", url: "#peta", type: "primary" },
+            { label: "Buka Google Maps", url: "#", type: "secondary" }
+          ]
+        }
+      },
+      {
+        id: "informasi-desa",
+        title: "Informasi Desa Argosari",
+        shortTitle: "Informasi Desa",
+        icon: "🏛️",
+        description: "Profil singkat, layanan desa, dan informasi umum Argosari.",
+        status: "Disiapkan",
+        detail: {
+          eyebrow: "INFORMASI DESA",
+          title: "Informasi Desa Argosari",
+          intro: "Bagian ini berisi informasi umum desa yang paling sering dibutuhkan warga dan pengunjung.",
+          highlights: [
+            "Desa Argosari, Kecamatan Senduro, Kabupaten Lumajang",
+            "Informasi layanan desa dan kontak admin",
+            "Profil singkat wilayah, potensi, dan akses",
+            "Catatan penting atau pengumuman bisa ditambahkan nanti"
+          ],
+          cards: [
+            {
+              title: "Profil singkat",
+              text: "Berisi ringkasan tentang Desa Argosari, potensi wilayah, dan informasi dasar desa."
+            },
+            {
+              title: "Layanan desa",
+              text: "Bisa diisi dengan jam layanan kantor desa, kontak admin, dan jenis layanan yang tersedia."
+            }
+          ],
+          actions: [
+            { label: "Lokasi kantor desa", url: "#", type: "primary" },
+            { label: "Hubungi admin", url: "#", type: "secondary" }
+          ]
+        }
+      },
+      {
+        id: "wisata-b29",
+        title: "Wisata B29",
+        shortTitle: "Wisata B29",
+        icon: "⛰️",
+        description: "Informasi akses, lokasi, dan panduan singkat wisata B29.",
+        status: "Disiapkan",
+        detail: {
+          eyebrow: "WISATA",
+          title: "Wisata B29 Argosari",
+          intro: "Bagian ini ditujukan untuk pengunjung wisata agar dapat mengakses informasi dasar secara cepat dari QR.",
+          highlights: [
+            "Lokasi dan akses menuju B29",
+            "Informasi parkir dan titik kumpul pengunjung",
+            "Catatan cuaca, keselamatan, atau imbauan lokal",
+            "Kontak pengelola atau admin jika tersedia"
+          ],
+          cards: [
+            {
+              title: "Panduan pengunjung",
+              text: "Berisi informasi singkat tentang akses, estimasi perjalanan, dan hal penting yang perlu diperhatikan wisatawan."
+            },
+            {
+              title: "Lokasi pendukung",
+              text: "Bisa ditambahkan titik parkir, toilet, warung, pos informasi, dan spot penting lain."
+            }
+          ],
+          actions: [
+            { label: "Buka lokasi B29", url: "#", type: "primary" },
+            { label: "Lihat peta", url: "#peta", type: "secondary" }
+          ]
+        }
+      },
+      {
+        id: "fasilitas-umum",
+        title: "Fasilitas Umum",
+        shortTitle: "Fasilitas Umum",
+        icon: "🏥",
+        description: "Balai desa, sekolah, posyandu, masjid, parkir, dan fasilitas lain.",
+        status: "Disiapkan",
+        detail: {
+          eyebrow: "FASILITAS UMUM",
+          title: "Daftar Fasilitas Umum",
+          intro: "Bagian ini memudahkan warga dan pengunjung menemukan fasilitas umum penting di sekitar Desa Argosari.",
+          highlights: [
+            "Balai desa dan kantor layanan",
+            "Sekolah, masjid, posyandu, dan fasilitas kesehatan",
+            "Toilet umum, area parkir, dan fasilitas wisata",
+            "Setiap titik bisa diberi tombol Google Maps"
+          ],
+          cards: [
+            {
+              title: "Contoh: Balai Desa",
+              text: "Nama lokasi, alamat singkat, keterangan layanan, dan tombol lokasi dapat ditampilkan di sini."
+            },
+            {
+              title: "Contoh: Toilet / Parkir",
+              text: "Fasilitas pendukung wisata dapat dimasukkan agar pengunjung mudah mencari kebutuhan dasar."
+            },
+            {
+              title: "Contoh: Masjid / Posyandu",
+              text: "Fasilitas warga dapat ditampilkan dengan kategori dan lokasi singkat."
+            }
+          ],
+          actions: [
+            { label: "Lihat semua fasilitas", url: "#peta", type: "primary" },
+            { label: "Tambah/koreksi data", url: "#update", type: "secondary" }
+          ]
+        }
+      },
+      {
+        id: "mitigasi-darurat",
+        title: "Mitigasi & Nomor Darurat",
+        shortTitle: "Mitigasi Darurat",
+        icon: "⚠️",
+        description: "Informasi jalur evakuasi, titik kumpul, dan kontak penting.",
+        status: "Perlu validasi",
+        detail: {
+          eyebrow: "MITIGASI & DARURAT",
+          title: "Mitigasi Bencana & Nomor Darurat",
+          intro: "Bagian ini harus divalidasi bersama perangkat desa/BPBD sebelum dipublikasikan sebagai informasi resmi.",
+          highlights: [
+            "Titik kumpul terdekat",
+            "Jalur evakuasi yang telah diverifikasi",
+            "Nomor darurat atau kontak admin desa",
+            "Catatan keselamatan untuk warga dan pengunjung"
+          ],
+          cards: [
+            {
+              title: "Titik kumpul",
+              text: "Isi dengan titik kumpul yang sudah disepakati dan diverifikasi oleh pihak terkait."
+            },
+            {
+              title: "Jalur evakuasi",
+              text: "Tampilkan rute yang aman dan hindari menampilkan jalur yang belum tervalidasi."
+            },
+            {
+              title: "Nomor penting",
+              text: "Bisa berisi kontak admin desa, pengelola wisata, layanan kesehatan, atau nomor darurat."
+            }
+          ],
+          actions: [
+            { label: "Lihat titik kumpul", url: "#peta", type: "primary" },
+            { label: "Hubungi nomor darurat", url: "#", type: "danger" }
+          ]
+        }
+      },
+      {
+        id: "update-data",
+        title: "Kirim Data / Koreksi Informasi",
+        shortTitle: "Update Data",
+        icon: "📝",
+        description: "Satu pintu untuk pendaftaran, koreksi, dan pembaruan data.",
+        status: "Form menyusul",
+        detail: {
+          eyebrow: "PEMBARUAN DATA",
+          title: "Kirim Data / Koreksi Informasi",
+          intro: "Gunakan satu form untuk semua kebutuhan pembaruan. Admin dapat memverifikasi data sebelum ditampilkan di website.",
+          highlights: [
+            "Koreksi informasi desa yang salah",
+            "Tambah lokasi fasilitas umum",
+            "Tambah informasi wisata atau UMKM",
+            "Tambah nomor penting atau laporan pembaruan"
+          ],
+          cards: [
+            {
+              title: "Satu Google Form",
+              text: "Di dalam form, pengguna memilih keperluannya: koreksi data, fasilitas umum, wisata, UMKM, kontak penting, atau lainnya."
+            },
+            {
+              title: "Verifikasi admin",
+              text: "Data yang masuk sebaiknya dicek dulu sebelum ditampilkan di website agar tetap valid."
+            }
+          ],
+          actions: [
+            { label: "Buka Form", url: "#update", type: "primary" },
+            { label: "Panduan pengisian", url: "#", type: "secondary" }
+          ]
+        }
+      }
+    ];
+
+    const $ = (selector) => document.querySelector(selector);
+
+    function safeLink(url) {
+      return url && url.trim() !== "" ? url : "#";
+    }
+
+    function getItemById(id) {
+      return MENU_ITEMS.find((item) => item.id === id) || MENU_ITEMS[0];
+    }
+
+    function createMenuCard(item) {
+      const a = document.createElement("a");
+      a.className = "menu-card";
+      a.href = `#detail-${item.id}`;
+      a.dataset.id = item.id;
+      a.dataset.search = `${item.title} ${item.shortTitle || ""} ${item.description || ""}`.toLowerCase();
+
+      a.innerHTML = `
+        <span class="icon" aria-hidden="true">${item.icon || "📌"}</span>
+        <span>
+          <h3>${item.title}</h3>
+          <p>${item.description || ""}</p>
+          <span class="status">${item.status || "Disiapkan"}</span>
+        </span>
+        <span class="arrow" aria-hidden="true">›</span>
+      `;
+
+      return a;
+    }
+
+    function renderMenu() {
+      const grid = $("#menuGrid");
+      if (!grid) return;
+
+      grid.innerHTML = "";
+      MENU_ITEMS.forEach((item) => grid.appendChild(createMenuCard(item)));
+    }
+
+    function createButton(action) {
+      const a = document.createElement("a");
+      a.className = `detail-button ${action.type || "secondary"}`;
+      a.href = safeLink(action.url);
+      a.textContent = action.label;
+
+      if (action.url && action.url.startsWith("http")) {
+        a.target = "_blank";
+        a.rel = "noopener";
+      }
+
+      return a;
+    }
+
+    function renderDetail(itemId, shouldScroll = false) {
+      const item = getItemById(itemId);
+      const detail = item.detail || {};
+
+      $("#detailEyebrow").textContent = detail.eyebrow || "DETAIL INFORMASI";
+      $("#detailTitle").textContent = detail.title || item.title;
+      $("#detailIntro").textContent = detail.intro || item.description;
+
+      const actions = $("#detailActions");
+      actions.innerHTML = "";
+      (detail.actions || []).forEach((action) => actions.appendChild(createButton(action)));
+
+      const content = $("#detailContent");
+      content.innerHTML = "";
+
+      if (detail.highlights && detail.highlights.length) {
+        const highlight = document.createElement("div");
+        highlight.className = "detail-highlight";
+        highlight.innerHTML = `
+          <h3>Yang akan ditampilkan</h3>
+          <ul>
+            ${detail.highlights.map((text) => `<li>${text}</li>`).join("")}
+          </ul>
+        `;
+        content.appendChild(highlight);
+      }
+
+      if (detail.cards && detail.cards.length) {
+        const grid = document.createElement("div");
+        grid.className = "detail-card-grid";
+        grid.innerHTML = detail.cards.map((card) => `
+          <article class="detail-card">
+            <h3>${card.title}</h3>
+            <p>${card.text}</p>
+          </article>
+        `).join("");
+        content.appendChild(grid);
+      }
+
+      document.querySelectorAll(".menu-card").forEach((card) => {
+        card.classList.toggle("is-active", card.dataset.id === item.id);
+      });
+
+      if (shouldScroll) {
+        const detailSection = $("#detail");
+        detailSection.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
+
+    function setupMenuClicks() {
+      document.addEventListener("click", (event) => {
+        const menuCard = event.target.closest(".menu-card");
+        if (!menuCard) return;
+
+        event.preventDefault();
+
+        const id = menuCard.dataset.id;
+        history.pushState(null, "", `#detail-${id}`);
+        renderDetail(id, true);
+      });
+    }
+
+    function setupHashRoute() {
+      const hash = window.location.hash.replace("#", "");
+
+      if (hash.startsWith("detail-")) {
+        renderDetail(hash.replace("detail-", ""), true);
+        return;
+      }
+
+      renderDetail(MENU_ITEMS[0].id, false);
+    }
+
+    function setupSearch() {
+      const input = $("#searchInput");
+      const empty = $("#emptyState");
+      if (!input) return;
+
+      input.addEventListener("input", () => {
+        const query = input.value.trim().toLowerCase();
+        const cards = Array.from(document.querySelectorAll(".menu-card"));
+        let visibleCount = 0;
+
+        cards.forEach((card) => {
+          const matches = card.dataset.search.includes(query);
+          card.hidden = !matches;
+          if (matches) visibleCount += 1;
+        });
+
+        if (empty) empty.hidden = visibleCount !== 0;
+      });
+    }
+
+    renderMenu();
+    setupMenuClicks();
+    setupSearch();
+    setupHashRoute();
+
+    window.addEventListener("hashchange", setupHashRoute);
+  </script>
+</body>
+</html>
