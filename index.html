@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>QR-One Argosari</title>
+  <meta name="description" content="Portal wisata Desa Argosari berbasis QR Code untuk peta, destinasi, fasilitas, panduan, dan kontak penting." />
+  <meta name="theme-color" content="#0f5132" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <a class="skip-link" href="#akses-cepat">Lewati ke akses cepat</a>
+
+  <header class="site-header">
+    <nav class="topbar" aria-label="Navigasi utama">
+      <a class="brand" href="#beranda" aria-label="QR-One Argosari">
+        <span class="brand-mark" id="brandMark">Q1</span>
+        <span id="brandTitle">QR-One Argosari</span>
+      </a>
+      <div class="nav-actions" aria-label="Menu cepat">
+        <a href="#peta">Peta</a>
+        <a href="#destinasi">Wisata</a>
+        <a href="#fasilitas">Fasilitas</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="beranda">
+    <section class="hero" aria-labelledby="siteTitle">
+      <div class="hero-bg" aria-hidden="true">
+        <span class="mountain mountain-one"></span>
+        <span class="mountain mountain-two"></span>
+        <span class="sun"></span>
+      </div>
+
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow" id="siteEyebrow">PORTAL WISATA DESA</p>
+          <h1 id="siteTitle">Jelajahi Argosari lewat satu QR.</h1>
+          <p class="hero-subtitle" id="siteSubtitle">Temukan peta wisata, destinasi, fasilitas pendukung, panduan kunjungan, dan kontak penting Desa Argosari dalam satu halaman ringan.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#peta">Buka Peta Wisata</a>
+            <a class="btn btn-secondary" href="#destinasi">Lihat Destinasi</a>
+          </div>
+        </div>
+
+        <aside class="quick-card" aria-label="Ringkasan QR-One">
+          <div class="quick-card-top">
+            <span class="pin">📍</span>
+            <span class="pill">Scan QR • Buka di HP</span>
+          </div>
+          <h2 id="quickTitle">Akses cepat untuk wisatawan</h2>
+          <p id="quickIntro">Cek lokasi wisata, akses jalan, parkir, toilet, mushola, warung, homestay, dan kontak bantuan tanpa perlu mengunduh aplikasi.</p>
+          <div class="stats" id="statsGrid"></div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="container notice" id="noticeText">Pilih kebutuhanmu: buka peta, cari destinasi, cek fasilitas, baca panduan, atau kirim koreksi data.</section>
+
+    <section class="container search-section" aria-label="Pencarian cepat">
+      <label for="searchInput">Cari cepat</label>
+      <div class="search-box">
+        <span aria-hidden="true">🔎</span>
+        <input id="searchInput" type="search" placeholder="Cari B29, parkir, toilet, mushola, homestay..." autocomplete="off" />
+      </div>
+    </section>
+
+    <section class="container access-section" id="akses-cepat" aria-labelledby="accessTitle">
+      <div class="section-head centered">
+        <p class="eyebrow">AKSES CEPAT</p>
+        <h2 id="accessTitle">Informasi yang paling dibutuhkan wisatawan</h2>
+        <p>Kartu dibuat besar, jelas, dan ramah HP agar mudah digunakan setelah memindai QR di lokasi.</p>
+      </div>
+      <div id="menuGrid" class="menu-grid" aria-live="polite"></div>
+      <p id="emptyState" class="empty-state" hidden>Tidak ada informasi yang cocok dengan pencarian.</p>
+    </section>
+
+    <section class="container map-section" id="peta" aria-labelledby="mapTitle">
+      <div class="map-copy">
+        <p class="eyebrow">PETA WISATA</p>
+        <h2 id="mapTitle">Peta wisata dan titik pendukung</h2>
+        <p id="mapDescription">Gunakan peta untuk menemukan destinasi, jalur akses, parkir, toilet, mushola, warung, homestay, UMKM wisata, dan titik bantuan terdekat.</p>
+        <div class="legend" id="mapLegend"></div>
+        <a class="btn btn-primary small" id="mapButton" href="#destinasi">Lihat daftar destinasi</a>
+      </div>
+      <div class="map-frame" id="mapFrame" role="img" aria-label="Peta wisata Argosari">
+        <div class="map-art" aria-hidden="true">
+          <span class="road"></span>
+          <span class="marker m1">⛰️</span>
+          <span class="marker m2">🅿️</span>
+          <span class="marker m3">🚻</span>
+          <span class="marker m4">☕</span>
+          <span class="marker m5">⚠️</span>
+        </div>
+        <div class="map-label">
+          <strong>Peta Wisata Argosari</strong>
+          <span>Destinasi dan fasilitas pendukung wisata.</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="container destinations-section" id="destinasi" aria-labelledby="destinationTitle">
+      <div class="section-head">
+        <p class="eyebrow">DESTINASI</p>
+        <h2 id="destinationTitle">Daftar destinasi prioritas</h2>
+        <p>Temukan daya tarik wisata, informasi singkat, dan kebutuhan dasar sebelum berkunjung.</p>
+      </div>
+      <div id="destinationGrid" class="destination-grid"></div>
+    </section>
+
+    <section class="container facilities-section" id="fasilitas" aria-labelledby="facilityTitle">
+      <div class="facility-panel">
+        <div>
+          <p class="eyebrow">FASILITAS PENDUKUNG</p>
+          <h2 id="facilityTitle">Yang membantu wisatawan di lapangan</h2>
+          <p>Informasi fasilitas dibuat ringkas agar pengunjung dapat cepat menemukan kebutuhan utama selama berada di Argosari.</p>
+        </div>
+        <div id="facilityList" class="facility-list"></div>
+      </div>
+    </section>
+
+    <section class="container guide-section" id="panduan" aria-labelledby="guideTitle">
+      <div class="section-head centered">
+        <p class="eyebrow">PANDUAN KUNJUNGAN</p>
+        <h2 id="guideTitle">Tips singkat sebelum berwisata</h2>
+        <p>Gunakan panduan ini untuk membantu perjalanan lebih nyaman, aman, dan tertib.</p>
+      </div>
+      <div id="guideGrid" class="guide-grid"></div>
+    </section>
+
+    <section class="container update-section" id="kontak" aria-labelledby="contactTitle">
+      <div>
+        <p class="eyebrow">KONTAK & INFORMASI</p>
+        <h2 id="contactTitle">Butuh bantuan atau informasi tambahan?</h2>
+        <p id="contactDescription">Gunakan tombol kontak atau formulir pembaruan data untuk melaporkan koreksi lokasi, fasilitas, foto, atau informasi wisata.</p>
+      </div>
+      <a id="contactButton" class="btn btn-secondary" href="#update">Kirim informasi</a>
+    </section>
+
+    <section class="container update-section" id="update" aria-labelledby="formTitle">
+      <div>
+        <p class="eyebrow">UPDATE DATA</p>
+        <h2 id="formTitle">Kirim / koreksi data wisata</h2>
+        <p id="formDescription">Gunakan form untuk usulan destinasi, koreksi titik lokasi, foto, fasilitas, UMKM wisata, atau kontak penting.</p>
+      </div>
+      <a id="formButton" class="btn btn-primary" href="#" aria-disabled="true">Form belum aktif</a>
+    </section>
+  </main>
+
+  <a id="whatsappFloat" class="whatsapp-float" href="#" target="_blank" rel="noopener" aria-label="Hubungi admin QR-One Argosari via WhatsApp">
+    <span class="wa-icon" aria-hidden="true">💬</span>
+    <span class="wa-label">WhatsApp</span>
+  </a>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div>
+        <strong id="footerTitle">QR-One Argosari</strong>
+        <p id="footerText">Portal peta wisata desa berbasis QR Code.</p>
+      </div>
+      <p id="lastUpdated">Terakhir diperbarui: Juni 2026</p>
+    </div>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
