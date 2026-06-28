@@ -2,7 +2,7 @@ const CONFIG = {
   site: {
     title: "Jelajahi Argosari lewat satu QR.",
     navTitle: "QR-One Argosari",
-    eyebrow: "PORTAL WISATA DESA",
+    eyebrow: "PORTAL INFORMASI DESA WISATA ARGOSARI",
     subtitle: "Temukan peta wisata, destinasi, fasilitas pendukung, panduan kunjungan, dan kontak penting Desa Argosari dalam satu halaman ringan.",
     notice: "Pilih kebutuhanmu: buka peta, cari destinasi, cek fasilitas, baca panduan, atau kirim koreksi data.",
     quickTitle: "Akses cepat untuk wisatawan",
@@ -38,7 +38,7 @@ const CONFIG = {
   // Format wajib memakai kode negara Indonesia: 62, bukan 0.
   // Contoh: 081234567890 menjadi 6281234567890.
   whatsapp: {
-    number: "6281234567890",
+    number: "6282139497797",
     message: "Halo Admin QR-One Argosari, saya ingin bertanya tentang informasi wisata Argosari.",
     floatText: "WhatsApp",
     ariaLabel: "Hubungi admin QR-One Argosari via WhatsApp"
