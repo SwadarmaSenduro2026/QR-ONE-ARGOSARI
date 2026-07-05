@@ -1,71 +1,63 @@
-# QR-One Argosari - Portal Wisata Siap Pakai
+# QR-ONE ARGOSARI - Layout Mirip WebGIS UMKM Lemahputih
 
-Versi ini dibuat sebagai portal wisata berbasis QR Code yang siap diunggah ke GitHub Pages. Kontennya berfokus pada peta wisata, destinasi, fasilitas pendukung, panduan kunjungan, kontak penting, dan koreksi data.
+Versi ini dibuat dengan susunan yang lebih mirip contoh `umkm-lemahputih`:
 
-## File yang diunggah ke GitHub
+1. Navbar: Home, Peta Wisata, Daftar Wisata, Tentang, Jelajahi
+2. Hero utama
+3. Tentang desa + slider/galeri
+4. Peta interaktif berbasis Leaflet
+5. Daftar wisata dengan tombol **Informasi lebih lanjut**
+6. Halaman detail terpisah `detail.html?id=...`
+7. Tautan penting pengganti Linktree
+8. Footer dan navigasi mobile
 
-Upload semua file berikut langsung ke root repository:
+## File yang perlu di-upload ke GitHub repository
+
+Upload semua file/folder ini ke root repository GitHub Pages:
 
 ```text
 index.html
+detail.html
 style.css
-script.js
 data.js
+script.js
+detail.js
 README.md
+.nojekyll
+assets/
 ```
 
-Jangan masukkan file ke dalam folder, karena GitHub Pages perlu membaca `index.html` langsung dari root repository.
+## Mengganti data wisata
 
-## Cara mengedit isi
+Buka `data.js`, lalu edit bagian `DESTINATIONS`.
 
-Edit file `data.js` untuk mengubah:
-
-- judul website;
-- teks beranda;
-- daftar menu;
-- destinasi wisata;
-- fasilitas pendukung;
-- panduan kunjungan;
-- link Google Form;
-- link Google My Maps atau WebGIS.
-
-## Cara memasang Google My Maps
-
-1. Buka Google My Maps.
-2. Buat peta dan masukkan titik wisata/fasilitas.
-3. Klik Bagikan/Sematkan peta.
-4. Salin URL `src` dari iframe.
-5. Tempel ke bagian berikut di `data.js`:
+Contoh bagian yang paling sering diganti:
 
 ```js
-map: {
-  embedUrl: "ISI_LINK_EMBED_GOOGLE_MY_MAPS_DI_SINI"
+{
+  id: "b29",
+  title: "Puncak B29 / Negeri di Atas Awan",
+  lat: -7.9592318,
+  lng: 112.9948334,
+  summary: "Ikon wisata Argosari...",
+  description: "Narasi lengkap..."
 }
 ```
 
-## Cara mengaktifkan tombol Form
+## Membuat halaman detail baru
 
-Masukkan link Google Form pada `data.js`:
-
-```js
-form: {
-  url: "ISI_LINK_GOOGLE_FORM_DI_SINI"
-}
-```
-
-Setelah link diisi, tombol akan otomatis aktif.
-
-
-## Cara mengganti nomor WhatsApp
-
-Edit file `data.js`, lalu cari bagian berikut:
+Tidak perlu membuat file HTML baru. Cukup tambahkan data baru di `DESTINATIONS`, misalnya:
 
 ```js
-whatsapp: {
-  number: "6281234567890",
-  message: "Halo Admin QR-One Argosari, saya ingin bertanya tentang informasi wisata Argosari.",
-  floatText: "WhatsApp"
-}
+id: "nama-wisata-baru"
 ```
 
-Ganti `6281234567890` dengan nomor WhatsApp admin/pengelola. Gunakan format kode negara Indonesia, misalnya nomor `081234567890` ditulis menjadi `6281234567890`.
+Nanti tombol detail otomatis mengarah ke:
+
+```text
+detail.html?id=nama-wisata-baru
+```
+
+## Catatan peta
+
+Peta memakai Leaflet dan OpenStreetMap dari CDN. Peta akan tampil saat website memiliki koneksi internet.

@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Detail Wisata | QR-ONE ARGOSARI</title>
+  <meta name="description" content="Informasi lengkap destinasi dan layanan wisata Desa Argosari." />
+  <meta name="theme-color" content="#234c2f" />
+  <link rel="icon" href="assets/logo.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIINfQF7+zVvr/AhR1N1EZwA7m4r24f8+2c=" crossorigin="" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="detail-body">
+  <header class="topbar detail-topbar">
+    <nav class="navbar" aria-label="Navigasi utama">
+      <a class="brand" href="index.html" aria-label="Kembali ke beranda QR-ONE Argosari">
+        <img src="assets/logo.svg" alt="Logo QR-ONE Argosari" />
+        <span>QR-ONE<br><strong>ARGOSARI</strong></span>
+      </a>
+      <a class="back-link" href="index.html#daftar">← Kembali ke daftar</a>
+    </nav>
+  </header>
+
+  <main id="detailRoot">
+    <section class="detail-hero">
+      <div class="container detail-hero-grid">
+        <div>
+          <p class="kicker" id="detailCategory">Informasi Wisata</p>
+          <h1 id="detailTitle">Memuat informasi...</h1>
+          <p class="hero-text" id="detailSummary"></p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" id="routeButton" target="_blank" rel="noopener">Buka Rute</a>
+            <a class="btn btn-outline" href="index.html#peta">Lihat Peta Utama</a>
+          </div>
+        </div>
+        <img id="detailImage" class="detail-image" src="assets/hero-argosari.svg" alt="Ilustrasi wisata Argosari" />
+      </div>
+    </section>
+
+    <section class="detail-content-section">
+      <div class="container detail-layout">
+        <article class="detail-main-card">
+          <span class="chip" id="detailStatus">Informasi</span>
+          <h2>Informasi lengkap</h2>
+          <p id="detailDescription"></p>
+
+          <div class="info-grid">
+            <div class="info-box">
+              <h3>Waktu terbaik</h3>
+              <p id="detailBestTime"></p>
+            </div>
+            <div class="info-box">
+              <h3>Alamat / posisi</h3>
+              <p id="detailAddress"></p>
+            </div>
+          </div>
+
+          <h3>Fasilitas / informasi yang tersedia</h3>
+          <ul class="check-list" id="facilityList"></ul>
+
+          <h3>Tips kunjungan</h3>
+          <ul class="check-list" id="tipsList"></ul>
+        </article>
+
+        <aside class="detail-side-card">
+          <h2>Lokasi</h2>
+          <div id="detailMap" class="detail-map"></div>
+          <p class="map-note">Peta memakai Leaflet dan OpenStreetMap. Koordinat bisa diperbarui di file <code>data.js</code>.</p>
+          <a class="btn btn-soft full" id="waAsk" target="_blank" rel="noopener">Tanya Admin</a>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="data.js"></script>
+  <script src="detail.js"></script>
+</body>
+</html>
