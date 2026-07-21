@@ -110,7 +110,7 @@ const DESTINATIONS = [
   },
   {
     id: "Rest Area 1 B29",
-    title: "Parkir, Toilet & Mushola",
+    title: "Rest Area 1 B29",
     category: "fasilitas",
     icon: "🚻",
     image: "assets/wisata-fasilitas.svg",
