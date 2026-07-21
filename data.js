@@ -42,19 +42,37 @@ const DESTINATIONS = [
   },
   {
     id: "spot-sunrise",
-    title: "Spot Foto & Sunrise Argosari",
+    title: "Gardu Pandang",
     category: "wisata",
     icon: "🌄",
     image: "assets/wisata-sunrise.svg",
     lat: -7.967916,
     lng: 113.011641,
     status: "Destinasi Unggulan",
-    summary: "Titik contoh untuk spot foto dan area pandang yang dapat diperbarui sesuai hasil survei.",
-    description: "Bagian ini disiapkan untuk menampung daftar spot foto, titik pandang sunrise, dan informasi waktu terbaik. Jika nanti ada beberapa titik, data dapat dibuat menjadi beberapa marker berbeda pada file data.js.",
-    address: "Koordinat sementara sekitar kawasan wisata Argosari. Perlu validasi lapangan.",
-    bestTime: "Pagi hari dan sore hari saat pencahayaan bagus untuk foto.",
-    facilities: ["Spot foto", "Pemandangan pegunungan", "Area pandang", "Informasi rute"],
-    tips: ["Jangan melewati batas aman saat berfoto.", "Bawa kembali sampah pribadi.", "Gunakan alas kaki yang nyaman.", "Pastikan titik koordinat diperbarui setelah survei."],
+    
+  summary: "Tempat terbaik untuk menikmati panorama pegunungan dan suasana matahari terbit di Desa Argosari.",
+
+  description: "Gardu Pandang Argosari menawarkan pemandangan alam berupa perbukitan, lahan pertanian, dan pegunungan yang terlihat indah dari ketinggian. Tempat ini cocok dikunjungi pada pagi hari untuk menikmati matahari terbit, udara sejuk, serta mengabadikan momen dengan latar panorama khas Desa Argosari.",
+
+  address: "Desa Argosari, Kecamatan Senduro, Kabupaten Lumajang, Jawa Timur",
+
+  bestTime: "Pukul 05.00–08.00 WIB, terutama saat cuaca cerah.",
+
+  facilities: [
+    "Gardu pandang",
+    "Spot foto",
+    "Area istirahat",
+    "Pemandangan pegunungan",
+    "Akses jalan menuju lokasi"
+  ],
+
+  tips: [
+    "Datang lebih awal untuk menikmati matahari terbit.",
+    "Gunakan pakaian hangat karena suhu pagi cukup dingin.",
+    "Gunakan alas kaki yang nyaman dan tidak licin.",
+    "Berhati-hati saat berada di sekitar area pandang.",
+    "Jaga kebersihan dan buang sampah pada tempatnya."
+  ],
     verified: false
   },
   {
