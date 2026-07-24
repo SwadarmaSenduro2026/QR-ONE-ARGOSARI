@@ -1,12 +1,6 @@
 /* =========================================================
-   SCRIPT HALAMAN UTAMA QR-ONE ARGOSARI
-
-   Perbaikan utama:
-   1. Peta memenuhi seluruh wadah.
-   2. Ukuran Leaflet dihitung setelah layout selesai.
-   3. Pencarian tidak melakukan zoom setiap mengetik.
-   4. Resize tidak menjalankan invalidateSize berulang-ulang.
-   5. Pergerakan peta dan perpindahan marker lebih halus.
+   QR-ONE ARGOSARI
+   Script halaman utama dengan peta Leaflet sederhana
 ========================================================= */
 
 const $ = (selector, parent = document) =>
@@ -15,33 +9,26 @@ const $ = (selector, parent = document) =>
 const $$ = (selector, parent = document) =>
   [...parent.querySelectorAll(selector)];
 
-const FALLBACK_IMAGE = "assets/hero-argosari.svg";
+
+/* =========================================================
+   STATUS APLIKASI
+========================================================= */
 
 const appState = {
-  activeCategory: "semua",
-  search: "",
   map: null,
-  tileLayer: null,
+  markerLayer: null,
   markers: new Map(),
-  userMarker: null,
   sliderIndex: 0,
-  mapResizeTimer: null,
-  searchTimer: null,
-  initialMapFitDone: false
+  resizeTimer: null
 };
 
 
 /* =========================================================
-   UTILITAS
+   FUNGSI DASAR
 ========================================================= */
 
-function escapeHtml(value) {
-  return String(value ?? "")
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
+function text(value) {
+  return String(value ?? "");
 }
 
 
@@ -55,9 +42,9 @@ function categoryLabel(categoryId) {
 
 
 function detailUrl(destination) {
-  return `detail.html?id=${encodeURIComponent(
-    destination.id
-  )}`;
+  return (
+    `detail.html?id=${encodeURIComponent(destination.id)}`
+  );
 }
 
 
@@ -79,39 +66,6 @@ function whatsappUrl(
 }
 
 
-function filteredDestinations() {
-  const keyword =
-    appState.search.trim().toLowerCase();
-
-  return DESTINATIONS.filter((item) => {
-    const matchesCategory =
-      appState.activeCategory === "semua" ||
-      item.category === appState.activeCategory;
-
-    const searchableText = [
-      item.title,
-      item.summary,
-      item.description,
-      item.status,
-      item.address,
-      categoryLabel(item.category),
-      ...(item.facilities || [])
-    ]
-      .join(" ")
-      .toLowerCase();
-
-    const matchesKeyword =
-      !keyword ||
-      searchableText.includes(keyword);
-
-    return (
-      matchesCategory &&
-      matchesKeyword
-    );
-  });
-}
-
-
 /* =========================================================
    GAMBAR CADANGAN
 ========================================================= */
@@ -122,23 +76,19 @@ function setupImageFallbacks() {
     (event) => {
       const image = event.target;
 
-      if (
-        !(image instanceof HTMLImageElement)
-      ) {
+      if (!(image instanceof HTMLImageElement)) {
         return;
       }
 
-      if (
-        image.dataset.fallbackApplied ===
-        "true"
-      ) {
+      if (image.dataset.fallbackApplied === "true") {
         return;
       }
 
-      image.dataset.fallbackApplied =
-        "true";
+      image.dataset.fallbackApplied = "true";
 
-      image.src = FALLBACK_IMAGE;
+      image.src =
+        SITE_CONFIG.fallbackImage ||
+        "assets/hero-argosari.svg";
     },
     true
   );
@@ -166,18 +116,15 @@ function setupNavigation() {
     );
   }
 
-  toggle.addEventListener(
-    "click",
-    () => {
-      const open =
-        links.classList.toggle("open");
+  toggle.addEventListener("click", () => {
+    const isOpen =
+      links.classList.toggle("open");
 
-      toggle.setAttribute(
-        "aria-expanded",
-        String(open)
-      );
-    }
-  );
+    toggle.setAttribute(
+      "aria-expanded",
+      String(isOpen)
+    );
+  });
 
   $$("a", links).forEach((link) => {
     link.addEventListener(
@@ -189,9 +136,7 @@ function setupNavigation() {
   document.addEventListener(
     "click",
     (event) => {
-      if (
-        !links.classList.contains("open")
-      ) {
+      if (!links.classList.contains("open")) {
         return;
       }
 
@@ -218,7 +163,7 @@ function setupNavigation() {
 
 
 /* =========================================================
-   SLIDER
+   SLIDER TENTANG ARGOSARI
 ========================================================= */
 
 function renderSlider() {
@@ -228,42 +173,44 @@ function renderSlider() {
     return;
   }
 
-  track.innerHTML = DESTINATIONS
-    .slice(0, 5)
-    .map(
-      (item, index) => `
-        <article
-          class="slide-card ${
-            index === appState.sliderIndex
-              ? "active"
-              : ""
-          }"
-          data-slide="${index}"
-        >
-          <img
-            src="${escapeHtml(item.image)}"
-            alt="${escapeHtml(item.title)}"
-            loading="lazy"
-          />
+  const items = DESTINATIONS.slice(0, 5);
 
-          <span>
-            ${escapeHtml(item.icon)}
-            ${escapeHtml(
-              categoryLabel(item.category)
-            )}
-          </span>
+  const currentItem =
+    items[appState.sliderIndex];
 
-          <h3>
-            ${escapeHtml(item.title)}
-          </h3>
+  if (!currentItem) {
+    track.innerHTML = "";
+    return;
+  }
 
-          <p>
-            ${escapeHtml(item.summary)}
-          </p>
-        </article>
-      `
-    )
-    .join("");
+  track.innerHTML = `
+    <article class="slide-card active">
+      <img
+        src="${text(currentItem.image)}"
+        alt="${text(currentItem.title)}"
+        loading="lazy"
+      />
+
+      <div class="slide-content">
+        <span>
+          ${text(currentItem.icon)}
+          ${text(categoryLabel(currentItem.category))}
+        </span>
+
+        <h3>
+          ${text(currentItem.title)}
+        </h3>
+
+        <p>
+          ${text(currentItem.summary)}
+        </p>
+
+        <a href="${detailUrl(currentItem)}">
+          Lihat informasi →
+        </a>
+      </div>
+    </article>
+  `;
 }
 
 
@@ -275,10 +222,7 @@ function setupSlider() {
     $(".slider-btn.next");
 
   const itemCount =
-    Math.min(
-      DESTINATIONS.length,
-      5
-    );
+    Math.min(DESTINATIONS.length, 5);
 
   if (
     !previousButton ||
@@ -288,7 +232,7 @@ function setupSlider() {
     return;
   }
 
-  function move(direction) {
+  function moveSlider(direction) {
     appState.sliderIndex =
       (
         appState.sliderIndex +
@@ -301,12 +245,12 @@ function setupSlider() {
 
   previousButton.addEventListener(
     "click",
-    () => move(-1)
+    () => moveSlider(-1)
   );
 
   nextButton.addEventListener(
     "click",
-    () => move(1)
+    () => moveSlider(1)
   );
 
   renderSlider();
@@ -314,75 +258,7 @@ function setupSlider() {
 
 
 /* =========================================================
-   LEGENDA
-========================================================= */
-
-function renderLegend() {
-  const target = $("#legendList");
-
-  if (!target) {
-    return;
-  }
-
-  target.innerHTML = CATEGORIES.map(
-    (category) => `
-      <button
-        class="legend-item ${
-          category.id ===
-          appState.activeCategory
-            ? "active"
-            : ""
-        }"
-        type="button"
-        data-category="${escapeHtml(
-          category.id
-        )}"
-        aria-pressed="${
-          category.id ===
-          appState.activeCategory
-        }"
-      >
-        <span>
-          ${escapeHtml(category.icon)}
-        </span>
-
-        <strong>
-          ${escapeHtml(category.label)}
-        </strong>
-      </button>
-    `
-  ).join("");
-
-  $$(".legend-item", target).forEach(
-    (button) => {
-      button.addEventListener(
-        "click",
-        () => {
-          appState.activeCategory =
-            button.dataset.category ||
-            "semua";
-
-          renderLegend();
-
-          renderDestinationCards();
-
-          /*
-           * Kamera peta menyesuaikan hanya
-           * setelah kategori dipilih.
-           */
-          updateMarkers({
-            fit: true,
-            animate: true
-          });
-        }
-      );
-    }
-  );
-}
-
-
-/* =========================================================
-   KARTU DESTINASI
+   DAFTAR DESTINASI
 ========================================================= */
 
 function renderDestinationCards() {
@@ -393,95 +269,68 @@ function renderDestinationCards() {
     return;
   }
 
-  const items =
-    filteredDestinations();
+  target.innerHTML = DESTINATIONS.map(
+    (item) => `
+      <article class="tour-card">
+        <div class="tour-image">
+          <img
+            src="${text(item.image)}"
+            alt="${text(item.title)}"
+            loading="lazy"
+          />
 
-  if (!items.length) {
-    target.innerHTML = `
-      <div class="empty-state">
-        <strong>
-          Tempat belum ditemukan.
-        </strong>
+          <span class="tour-badge">
+            ${text(item.status)}
+          </span>
+        </div>
 
-        <p>
-          Coba gunakan kata kunci atau
-          kategori yang berbeda.
-        </p>
-      </div>
-    `;
+        <div class="tour-body">
+          <p class="tour-category">
+            ${text(item.icon)}
+            ${text(categoryLabel(item.category))}
+          </p>
 
-    return;
-  }
+          <h3>
+            ${text(item.title)}
+          </h3>
 
-  target.innerHTML = items
-    .map(
-      (item) => `
-        <article class="tour-card">
-          <div class="tour-image">
-            <img
-              src="${escapeHtml(item.image)}"
-              alt="${escapeHtml(item.title)}"
-              loading="lazy"
-            />
+          <p>
+            ${text(item.summary)}
+          </p>
 
-            <span class="tour-badge">
-              ${escapeHtml(item.status)}
-            </span>
+          <div class="card-actions">
+            <button
+              class="btn btn-soft small"
+              type="button"
+              data-focus-map="${text(item.id)}"
+            >
+              Lihat di Peta
+            </button>
+
+            <a
+              class="btn btn-primary small"
+              href="${detailUrl(item)}"
+            >
+              Informasi Lengkap
+            </a>
           </div>
+        </div>
+      </article>
+    `
+  ).join("");
 
-          <div class="tour-body">
-            <p class="tour-category">
-              ${escapeHtml(item.icon)}
-              ${escapeHtml(
-                categoryLabel(item.category)
-              )}
-            </p>
-
-            <h3>
-              ${escapeHtml(item.title)}
-            </h3>
-
-            <p>
-              ${escapeHtml(item.summary)}
-            </p>
-
-            <div class="card-actions">
-              <button
-                class="btn btn-soft small"
-                type="button"
-                data-focus="${escapeHtml(
-                  item.id
-                )}"
-              >
-                Lihat di Peta
-              </button>
-
-              <a
-                class="btn btn-primary small"
-                href="${detailUrl(item)}"
-              >
-                Informasi lebih lanjut
-              </a>
-            </div>
-          </div>
-        </article>
-      `
-    )
-    .join("");
-
-  $$(
-    "[data-focus]",
-    target
-  ).forEach((button) => {
-    button.addEventListener(
-      "click",
-      () => {
-        focusDestination(
-          button.dataset.focus
-        );
-      }
-    );
-  });
+  $$("[data-focus-map]", target).forEach(
+    (button) => {
+      button.addEventListener(
+        "click",
+        () => {
+          focusDestination(
+            button.dataset.focusMap
+          );
+        }
+      );
+    }
+  );
 }
 
 
@@ -497,69 +346,51 @@ function renderImportantLinks() {
     return;
   }
 
-  target.innerHTML =
-    IMPORTANT_LINKS.map(
-      (link) => `
-        <a
-          class="info-link"
-          href="${escapeHtml(link.url)}"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <span class="info-icon">
-            ${escapeHtml(link.icon)}
-          </span>
+  target.innerHTML = IMPORTANT_LINKS.map(
+    (link) => `
+      <a
+        class="info-link"
+        href="${text(link.url)}"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <span class="info-icon">
+          ${text(link.icon)}
+        </span>
 
-          <strong>
-            ${escapeHtml(link.title)}
-          </strong>
+        <strong>
+          ${text(link.title)}
+        </strong>
 
-          <p>
-            ${escapeHtml(
-              link.description
-            )}
-          </p>
+        <p>
+          ${text(link.description)}
+        </p>
 
-          <em>
-            Buka informasi →
-          </em>
-        </a>
-      `
-    ).join("");
+        <em>
+          Buka informasi →
+        </em>
+      </a>
+    `
+  ).join("");
 }
 
 
 /* =========================================================
-   MARKER DAN POPUP
+   POPUP PETA
 ========================================================= */
-
-function markerHtml(item) {
-  return `
-    <div
-      class="custom-marker marker-${escapeHtml(
-        item.category
-      )}"
-    >
-      <span>
-        ${escapeHtml(item.icon)}
-      </span>
-    </div>
-  `;
-}
-
 
 function popupHtml(item) {
   return `
-    <div class="popup-card">
+    <div class="simple-popup">
       <strong>
-        ${escapeHtml(item.title)}
+        ${text(item.title)}
       </strong>
 
       <p>
-        ${escapeHtml(item.summary)}
+        ${text(item.summary)}
       </p>
 
-      <div class="popup-actions">
+      <div class="simple-popup-actions">
         <a href="${detailUrl(item)}">
           Detail
         </a>
@@ -569,7 +400,7 @@ function popupHtml(item) {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Rute
+          Buka Rute
         </a>
       </div>
     </div>
@@ -578,224 +409,201 @@ function popupHtml(item) {
 
 
 /* =========================================================
-   PESAN PETA GAGAL
+   LEGENDA DESTINASI PETA
 ========================================================= */
 
-function showMapFallback(message) {
-  const fallback =
-    $("#mapFallback");
+function renderMapPlaceList() {
+  const target =
+    $("#mapPlaceList");
 
-  if (!fallback) {
+  if (!target) {
     return;
   }
 
-  if (message) {
-    fallback.textContent = message;
-  }
+  target.innerHTML = DESTINATIONS.map(
+    (item) => `
+      <button
+        class="map-place-button"
+        type="button"
+        data-map-place="${text(item.id)}"
+      >
+        <span class="map-place-icon">
+          ${text(item.icon)}
+        </span>
 
-  fallback.hidden = false;
+        <span>
+          <strong>
+            ${text(item.title)}
+          </strong>
+
+          <small>
+            ${text(categoryLabel(item.category))}
+          </small>
+        </span>
+      </button>
+    `
+  ).join("");
+
+  $$("[data-map-place]", target).forEach(
+    (button) => {
+      button.addEventListener(
+        "click",
+        () => {
+          focusDestination(
+            button.dataset.mapPlace,
+            false
+          );
+        }
+      );
+    }
+  );
 }
 
 
 /* =========================================================
-   PERHITUNGAN UKURAN PETA
+   PESAN KESALAHAN PETA
 ========================================================= */
 
-function refreshMapSize(delay = 0) {
+function showMapError(message) {
+  const errorElement =
+    $("#mapError");
+
+  if (!errorElement) {
+    return;
+  }
+
+  if (message) {
+    errorElement.textContent = message;
+  }
+
+  errorElement.hidden = false;
+}
+
+
+/* =========================================================
+   MEMPERBARUI UKURAN PETA
+========================================================= */
+
+function refreshMap(delay = 0) {
   if (!appState.map) {
     return;
   }
 
   window.clearTimeout(
-    appState.mapResizeTimer
+    appState.resizeTimer
   );
 
-  appState.mapResizeTimer =
+  appState.resizeTimer =
     window.setTimeout(() => {
-      /*
-       * Hentikan animasi sebelumnya agar
-       * tidak bertumpuk.
-       */
-      appState.map.stop();
-
       appState.map.invalidateSize({
         pan: false,
-        animate: false,
-        debounceMoveend: true
+        animate: false
       });
     }, delay);
 }
 
 
 /* =========================================================
-   PEMBUATAN PETA
+   MEMBUAT PETA SEDERHANA
 ========================================================= */
 
 function initMap() {
   const mapElement =
-    $("#map");
+    document.getElementById("argosariMap");
 
   if (!mapElement) {
     console.error(
-      "Elemen #map tidak ditemukan."
+      "Elemen #argosariMap tidak ditemukan."
     );
 
     return;
   }
 
-  if (
-    typeof window.L === "undefined"
-  ) {
-    showMapFallback(
-      "Peta tidak dapat dimuat karena Leaflet gagal dibuka. Periksa koneksi internet lalu muat ulang halaman."
+  if (typeof window.L === "undefined") {
+    showMapError(
+      "Leaflet tidak dapat dimuat. Periksa koneksi internet lalu muat ulang halaman."
     );
 
     return;
   }
 
-  /*
-   * Mencegah peta dibuat dua kali.
-   */
   if (appState.map) {
     return;
   }
 
   try {
+    /*
+     * Peta dibuat satu kali saja.
+     * Konfigurasinya sengaja sederhana.
+     */
     appState.map = L.map(
-      mapElement,
+      "argosariMap",
       {
-        center:
-          SITE_CONFIG.mapCenter,
-
-        zoom:
-          SITE_CONFIG.mapZoom,
-
         zoomControl: true,
-
-        attributionControl: true,
-
         scrollWheelZoom: true,
-
         doubleClickZoom: true,
-
-        boxZoom: true,
-
-        keyboard: true,
-
         dragging: true,
-
-        /*
-         * Animasi bawaan Leaflet.
-         */
+        keyboard: true,
         zoomAnimation: true,
-
         fadeAnimation: true,
-
-        markerZoomAnimation: true,
-
-        /*
-         * Momentum saat peta digeser.
-         */
-        inertia: true,
-
-        inertiaDeceleration: 3000,
-
-        inertiaMaxSpeed: 1500,
-
-        easeLinearity: 0.25,
-
-        /*
-         * Roda mouse tidak terlalu sensitif.
-         */
-        wheelDebounceTime: 40,
-
-        wheelPxPerZoomLevel: 90,
-
-        preferCanvas: false
+        markerZoomAnimation: true
       }
+    ).setView(
+      SITE_CONFIG.mapCenter,
+      SITE_CONFIG.mapZoom
     );
 
-    appState.tileLayer =
-      L.tileLayer(
-        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-        {
-          minZoom: 3,
+    /*
+     * Peta dasar OpenStreetMap.
+     */
+    L.tileLayer(
+      "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+      {
+        minZoom: 3,
+        maxZoom: 19,
+        tileSize: 256,
+        detectRetina: false,
+        keepBuffer: 3,
+        updateWhenIdle: false,
+        attribution:
+          SITE_CONFIG.tileAttribution ||
+          "© OpenStreetMap"
+      }
+    ).addTo(appState.map);
 
-          maxZoom: 19,
-
-          /*
-           * Mempertahankan tile di sekitar
-           * layar agar drag lebih lancar.
-           */
-          keepBuffer: 4,
-
-          /*
-           * Tile tetap diperbarui saat
-           * pengguna menggeser peta.
-           */
-          updateWhenIdle: false,
-
-          /*
-           * Mengurangi pekerjaan saat
-           * animasi zoom berlangsung.
-           */
-          updateWhenZooming: false,
-
-          detectRetina: false,
-
-          attribution:
-            SITE_CONFIG.tileAttribution
-        }
+    /*
+     * Semua marker dimasukkan ke satu layer.
+     */
+    appState.markerLayer =
+      L.featureGroup().addTo(
+        appState.map
       );
 
-    appState.tileLayer.addTo(
-      appState.map
-    );
-
-    appState.tileLayer.on(
-      "tileerror",
-      (event) => {
-        console.warn(
-          "Tile peta gagal dimuat:",
-          event?.tile?.src || event
-        );
-      }
-    );
-
     DESTINATIONS.forEach((item) => {
+      /*
+       * Menggunakan marker standar Leaflet.
+       * Tidak memakai marker HTML khusus agar lebih ringan.
+       */
       const marker = L.marker(
         [item.lat, item.lng],
         {
           title: item.title,
-
-          riseOnHover: true,
-
-          icon: L.divIcon({
-            html: markerHtml(item),
-
-            className:
-              "marker-shell",
-
-            iconSize: [42, 42],
-
-            iconAnchor: [21, 42],
-
-            popupAnchor: [0, -40]
-          })
-        }
-      ).bindPopup(
-        popupHtml(item),
-        {
-          maxWidth: 290,
-
-          autoPan: true,
-
-          autoPanPadding:
-            [24, 24]
+          riseOnHover: true
         }
       );
 
-      marker.addTo(appState.map);
+      marker.bindPopup(
+        popupHtml(item),
+        {
+          maxWidth: 300,
+          autoPan: true,
+          autoPanPadding: [20, 20]
+        }
+      );
+
+      marker.addTo(
+        appState.markerLayer
+      );
 
       appState.markers.set(
         item.id,
@@ -804,175 +612,66 @@ function initMap() {
     });
 
     /*
-     * Tunggu dua frame sampai CSS Grid dan
-     * ukuran .map-wrap selesai dihitung.
+     * Menampilkan semua lokasi saat pertama dibuka.
      */
-    function finishInitialLayout() {
-      refreshMapSize(0);
+    const bounds =
+      appState.markerLayer.getBounds();
 
-      window.setTimeout(() => {
-        if (
-          !appState.initialMapFitDone
-        ) {
-          updateMarkers({
-            fit: true,
-            animate: false
-          });
-
-          appState.initialMapFitDone =
-            true;
+    if (bounds.isValid()) {
+      appState.map.fitBounds(
+        bounds,
+        {
+          padding: [35, 35],
+          maxZoom: 14,
+          animate: false
         }
-      }, 60);
+      );
     }
 
+    /*
+     * Tunggu layout selesai sebelum menghitung ukuran.
+     */
     requestAnimationFrame(() => {
-      requestAnimationFrame(
-        finishInitialLayout
-      );
+      requestAnimationFrame(() => {
+        refreshMap(0);
+      });
     });
 
-    appState.map.whenReady(() => {
-      refreshMapSize(120);
-    });
+    window.setTimeout(
+      () => refreshMap(0),
+      250
+    );
   } catch (error) {
     console.error(
       "Peta gagal dibuat:",
       error
     );
 
-    showMapFallback(
-      "Peta tidak dapat dibuat. Muat ulang halaman atau periksa Console browser."
+    showMapError(
+      "Peta gagal dibuat. Periksa Console browser untuk melihat kesalahan."
     );
   }
 }
 
 
 /* =========================================================
-   FILTER MARKER
+   FOKUS KE SATU DESTINASI
 ========================================================= */
 
-function updateMarkers(
-  {
-    fit = false,
-    animate = false
-  } = {}
+function focusDestination(
+  destinationId,
+  scrollToMap = true
 ) {
-  if (!appState.map) {
-    return;
-  }
-
-  const visibleItems =
-    filteredDestinations();
-
-  const visibleIds =
-    new Set(
-      visibleItems.map(
-        (item) => item.id
-      )
-    );
-
-  DESTINATIONS.forEach((item) => {
-    const marker =
-      appState.markers.get(item.id);
-
-    if (!marker) {
-      return;
-    }
-
-    const shouldBeVisible =
-      visibleIds.has(item.id);
-
-    const currentlyVisible =
-      appState.map.hasLayer(marker);
-
-    /*
-     * Marker hanya ditambah atau dihapus
-     * jika statusnya berubah.
-     */
-    if (
-      shouldBeVisible &&
-      !currentlyVisible
-    ) {
-      marker.addTo(appState.map);
-    }
-
-    if (
-      !shouldBeVisible &&
-      currentlyVisible
-    ) {
-      appState.map.removeLayer(marker);
-    }
-  });
-
-  /*
-   * Jangan mengubah posisi kamera jika
-   * fit bernilai false.
-   */
-  if (
-    !fit ||
-    visibleItems.length === 0
-  ) {
-    return;
-  }
-
-  refreshMapSize(0);
-
-  appState.map.stop();
-
-  if (visibleItems.length === 1) {
-    const item =
-      visibleItems[0];
-
-    appState.map.setView(
-      [item.lat, item.lng],
-      15,
-      {
-        animate
-      }
-    );
-
-    return;
-  }
-
-  const bounds =
-    L.latLngBounds(
-      visibleItems.map(
-        (item) => [
-          item.lat,
-          item.lng
-        ]
-      )
-    );
-
-  appState.map.fitBounds(
-    bounds,
-    {
-      paddingTopLeft:
-        [44, 44],
-
-      paddingBottomRight:
-        [44, 44],
-
-      maxZoom: 14,
-
-      animate
-    }
-  );
-}
-
-
-/* =========================================================
-   FOKUS DESTINASI
-========================================================= */
-
-function focusDestination(id) {
   const destination =
     DESTINATIONS.find(
-      (item) => item.id === id
+      (item) =>
+        item.id === destinationId
     );
 
   const marker =
-    appState.markers.get(id);
+    appState.markers.get(
+      destinationId
+    );
 
   if (
     !destination ||
@@ -982,44 +681,21 @@ function focusDestination(id) {
     return;
   }
 
-  appState.map.stop();
-
-  appState.activeCategory =
-    "semua";
-
-  appState.search = "";
-
-  const input =
-    $("#searchInput");
-
-  if (input) {
-    input.value = "";
+  if (scrollToMap) {
+    document
+      .getElementById("peta")
+      ?.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
   }
 
-  renderLegend();
-
-  renderDestinationCards();
-
-  updateMarkers({
-    fit: false
-  });
-
-  document
-    .getElementById("peta")
-    ?.scrollIntoView({
-      behavior: "smooth",
-      block: "start"
-    });
+  const delay =
+    scrollToMap ? 500 : 0;
 
   window.setTimeout(() => {
-    refreshMapSize(0);
+    refreshMap(0);
 
-    appState.map.stop();
-
-    /*
-     * flyTo memberi perpindahan
-     * yang lebih halus.
-     */
     appState.map.flyTo(
       [
         destination.lat,
@@ -1028,217 +704,92 @@ function focusDestination(id) {
       16,
       {
         animate: true,
-        duration: 0.65
+        duration: 0.7
       }
     );
 
     window.setTimeout(() => {
       marker.openPopup();
-    }, 700);
-  }, 480);
+    }, 720);
+  }, delay);
 }
 
 
 /* =========================================================
-   PENCARIAN
+   PENANGANAN PERUBAHAN UKURAN
 ========================================================= */
 
-function setupSearch() {
-  const input =
-    $("#searchInput");
+function setupMapRefresh() {
+  let resizeTimer;
 
-  if (!input) {
-    return;
-  }
+  window.addEventListener(
+    "load",
+    () => refreshMap(150),
+    {
+      once: true
+    }
+  );
 
-  input.addEventListener(
-    "input",
+  window.addEventListener(
+    "resize",
     () => {
       window.clearTimeout(
-        appState.searchTimer
+        resizeTimer
       );
 
-      /*
-       * Debounce mencegah fungsi dijalankan
-       * pada setiap penekanan tombol.
-       */
-      appState.searchTimer =
+      resizeTimer =
         window.setTimeout(() => {
-          appState.search =
-            input.value.trim();
-
-          renderDestinationCards();
-
-          /*
-           * Marker diperbarui, tetapi kamera
-           * peta tidak langsung berpindah.
-           */
-          updateMarkers({
-            fit: false
-          });
-        }, 250);
+          refreshMap(0);
+        }, 200);
+    },
+    {
+      passive: true
     }
   );
 
-  /*
-   * Peta baru menyesuaikan lokasi
-   * ketika pengguna menekan Enter.
-   */
-  input.addEventListener(
-    "keydown",
-    (event) => {
-      if (
-        event.key !== "Enter"
-      ) {
-        return;
-      }
-
-      event.preventDefault();
-
-      appState.search =
-        input.value.trim();
-
-      renderDestinationCards();
-
-      updateMarkers({
-        fit: true,
-        animate: true
-      });
+  window.addEventListener(
+    "orientationchange",
+    () => refreshMap(300),
+    {
+      passive: true
     }
   );
-}
 
+  $$('a[href="#peta"]').forEach(
+    (link) => {
+      link.addEventListener(
+        "click",
+        () => refreshMap(500)
+      );
+    }
+  );
 
-/* =========================================================
-   LOKASI PENGGUNA
-========================================================= */
-
-function setupLocateButton() {
-  const button =
-    $("#locateBtn");
-
-  if (!button) {
-    return;
-  }
-
-  button.addEventListener(
-    "click",
+  window.addEventListener(
+    "hashchange",
     () => {
       if (
-        !navigator.geolocation ||
-        !appState.map
+        window.location.hash ===
+        "#peta"
       ) {
-        window.alert(
-          "Fitur lokasi belum tersedia di browser ini."
-        );
-
-        return;
+        refreshMap(250);
       }
-
-      const defaultLabel =
-        "📍 Tampilkan lokasi saya";
-
-      button.disabled = true;
-
-      button.textContent =
-        "Mencari lokasi...";
-
-      navigator.geolocation
-        .getCurrentPosition(
-          (position) => {
-            const {
-              latitude,
-              longitude
-            } = position.coords;
-
-            if (
-              appState.userMarker
-            ) {
-              appState.map.removeLayer(
-                appState.userMarker
-              );
-            }
-
-            appState.userMarker =
-              L.circleMarker(
-                [
-                  latitude,
-                  longitude
-                ],
-                {
-                  radius: 9,
-
-                  weight: 4,
-
-                  color: "#ffffff",
-
-                  fillColor:
-                    "#2467d1",
-
-                  fillOpacity: 1
-                }
-              )
-                .addTo(appState.map)
-                .bindPopup(
-                  "Lokasi Anda saat ini"
-                );
-
-            refreshMapSize(0);
-
-            appState.map.flyTo(
-              [
-                latitude,
-                longitude
-              ],
-              15,
-              {
-                animate: true,
-                duration: 0.65
-              }
-            );
-
-            appState.userMarker
-              .openPopup();
-
-            button.disabled =
-              false;
-
-            button.textContent =
-              defaultLabel;
-          },
-
-          () => {
-            window.alert(
-              "Lokasi tidak dapat diakses. Izinkan akses lokasi pada browser lalu coba kembali."
-            );
-
-            button.disabled =
-              false;
-
-            button.textContent =
-              defaultLabel;
-          },
-
-          {
-            enableHighAccuracy: true,
-
-            timeout: 10000,
-
-            maximumAge: 60000
-          }
-        );
     }
   );
+
+  if (
+    window.location.hash === "#peta"
+  ) {
+    refreshMap(300);
+  }
 }
 
 
 /* =========================================================
-   KONTAK
+   KONTAK WHATSAPP
 ========================================================= */
 
 function setupContactLinks() {
-  const url =
-    whatsappUrl();
+  const url = whatsappUrl();
 
   [
     "waUpdate",
@@ -1256,170 +807,22 @@ function setupContactLinks() {
 
 
 /* =========================================================
-   PENANGANAN RESIZE
-========================================================= */
-
-function setupMapResizeHandling() {
-  let windowResizeTimer = null;
-
-  function handlePageReady() {
-    refreshMapSize(120);
-  }
-
-  if (
-    document.readyState ===
-    "complete"
-  ) {
-    handlePageReady();
-  } else {
-    window.addEventListener(
-      "load",
-      handlePageReady,
-      {
-        once: true
-      }
-    );
-  }
-
-  /*
-   * Resize hanya dihitung setelah pengguna
-   * selesai mengubah ukuran browser.
-   */
-  window.addEventListener(
-    "resize",
-    () => {
-      window.clearTimeout(
-        windowResizeTimer
-      );
-
-      windowResizeTimer =
-        window.setTimeout(() => {
-          refreshMapSize(0);
-        }, 180);
-    },
-    {
-      passive: true
-    }
-  );
-
-  window.addEventListener(
-    "orientationchange",
-    () => {
-      refreshMapSize(300);
-    },
-    {
-      passive: true
-    }
-  );
-
-  /*
-   * Hitung ulang ketika tombol menuju
-   * bagian peta ditekan.
-   */
-  $$('a[href="#peta"]').forEach(
-    (link) => {
-      link.addEventListener(
-        "click",
-        () => {
-          refreshMapSize(420);
-        }
-      );
-    }
-  );
-
-  window.addEventListener(
-    "hashchange",
-    () => {
-      if (
-        window.location.hash ===
-        "#peta"
-      ) {
-        refreshMapSize(250);
-      }
-    }
-  );
-
-  /*
-   * Hitung ukuran ketika section peta
-   * benar-benar masuk ke layar.
-   */
-  const mapSection =
-    document.getElementById("peta");
-
-  if (
-    "IntersectionObserver" in window &&
-    mapSection
-  ) {
-    const observer =
-      new IntersectionObserver(
-        (entries) => {
-          const visible =
-            entries.some(
-              (entry) =>
-                entry.isIntersecting
-            );
-
-          if (!visible) {
-            return;
-          }
-
-          refreshMapSize(80);
-        },
-        {
-          root: null,
-          threshold: 0.05
-        }
-      );
-
-    observer.observe(mapSection);
-  }
-
-  /*
-   * Font Google dapat mengubah ukuran
-   * layout setelah selesai dimuat.
-   */
-  if (document.fonts?.ready) {
-    document.fonts.ready.then(
-      () => {
-        refreshMapSize(80);
-      }
-    );
-  }
-
-  if (
-    window.location.hash === "#peta"
-  ) {
-    refreshMapSize(350);
-  }
-}
-
-
-/* =========================================================
    MENJALANKAN WEBSITE
 ========================================================= */
 
 function boot() {
   setupImageFallbacks();
-
   setupNavigation();
-
   setupSlider();
 
-  renderLegend();
-
   renderDestinationCards();
-
   renderImportantLinks();
-
-  setupSearch();
-
-  setupLocateButton();
+  renderMapPlaceList();
 
   setupContactLinks();
 
   initMap();
-
-  setupMapResizeHandling();
+  setupMapRefresh();
 }
 
 
