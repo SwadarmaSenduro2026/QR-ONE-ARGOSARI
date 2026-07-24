@@ -512,20 +512,24 @@ input {
 
 .map-panel {
   display: grid;
-  grid-template-columns: 310px minmax(0, 1fr);
-  gap: 20px;
-  padding: 18px;
+  grid-template-columns: minmax(230px, 270px) minmax(0, 1fr);
+  align-items: stretch;
+  gap: 18px;
+  padding: 16px;
   border: 1px solid var(--line);
   border-radius: var(--radius-xl);
-  background: rgba(255, 255, 255, 0.86);
+  background: rgba(255, 255, 255, 0.88);
   box-shadow: var(--shadow);
 }
 
 .map-legend {
+  max-height: 520px;
   padding: 20px;
+  overflow-y: auto;
   border-radius: 24px;
   background: var(--green-950);
   color: var(--white);
+  scrollbar-width: thin;
 }
 
 .map-legend h3 {
@@ -594,15 +598,20 @@ input {
 }
 
 .map-wrap {
-  min-height: 590px;
+  position: relative;
+  width: 100%;
+  height: clamp(420px, 58vh, 520px);
+  min-height: 0;
   overflow: hidden;
-  border-radius: 24px;
   border: 1px solid var(--line);
+  border-radius: 24px;
+  background: #e7eee8;
 }
 
 .map {
   width: 100%;
-  min-height: 590px;
+  height: 100%;
+  min-height: 0;
 }
 
 .marker-shell {
@@ -983,10 +992,19 @@ code {
     padding: 56px 0 88px;
   }
 
-  .map-wrap,
-  .map {
-    min-height: 480px;
-  }
+.map-legend {
+  max-height: none;
+  overflow-y: visible;
+}
+
+.map-wrap {
+  height: 440px;
+}
+
+.map {
+  width: 100%;
+  height: 100%;
+}
 
   .card-grid,
   .link-grid {
@@ -1080,10 +1098,28 @@ code {
     padding: 16px;
   }
 
-  .map-wrap,
-  .map {
-    min-height: 420px;
-  }
+  .map-wrap {
+  height: 360px;
+  min-height: 0;
+  border-radius: 18px;
+}
+
+.map {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
+
+  .leaflet-control-zoom a {
+  width: 34px;
+  height: 34px;
+  line-height: 34px;
+}
+
+.leaflet-control-attribution {
+  max-width: 220px;
+  font-size: 9px;
+}
 
   .card-grid,
   .link-grid,
