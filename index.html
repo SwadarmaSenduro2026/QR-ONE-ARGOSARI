@@ -94,87 +94,51 @@
       </p>
 
       <h2 id="mapTitle">
-        Temukan lokasi wisata dan layanan di Argosari
+        Temukan lokasi wisata di Desa Argosari
       </h2>
 
       <p>
-        Gunakan kategori atau kolom pencarian untuk
-        menemukan destinasi, penginapan, fasilitas,
-        dan layanan wisata. Pilih marker untuk melihat
-        informasi serta rute menuju lokasi.
+        Klik marker atau pilih destinasi pada legenda untuk
+        melihat informasi singkat dan lokasi tujuan.
       </p>
     </div>
 
-    <div class="map-panel">
-      <aside
-        class="map-legend"
-        aria-label="Filter peta wisata"
-      >
-        <h3>
-          Legenda
-        </h3>
+    <div class="simple-map-layout">
 
-        <p>
-          Pilih kategori untuk menampilkan titik
-          yang Anda butuhkan.
-        </p>
-
+      <!-- PETA -->
+      <div class="simple-map-box">
         <div
-          id="legendList"
-          class="legend-list"
-        ></div>
-
-        <label
-          class="search-label"
-          for="searchInput"
-        >
-          Cari tempat
-        </label>
-
-        <div class="search-box">
-          <span aria-hidden="true">
-            🔎
-          </span>
-
-          <input
-            id="searchInput"
-            type="search"
-            placeholder="Contoh: B29, homestay, rest area"
-            autocomplete="off"
-          />
-        </div>
-
-        <button
-          class="btn btn-soft full"
-          id="locateBtn"
-          type="button"
-        >
-          Tampilkan lokasi saya
-        </button>
-
-        <p class="map-helper">
-          Tekan Enter setelah mencari untuk
-          menyesuaikan tampilan peta.
-        </p>
-      </aside>
-
-      <div class="map-wrap">
-        <div
-          id="map"
-          class="map"
-          role="region"
-          aria-label="Peta wisata interaktif Desa Argosari"
+          id="argosariMap"
+          aria-label="Peta wisata Desa Argosari"
         ></div>
 
         <div
-          id="mapFallback"
-          class="map-fallback"
+          id="mapError"
+          class="simple-map-error"
           hidden
         >
-          Peta tidak dapat dimuat. Periksa koneksi
-          internet lalu muat ulang halaman.
+          Peta tidak dapat dimuat. Periksa koneksi internet,
+          kemudian muat ulang halaman.
         </div>
       </div>
+
+      <!-- LEGENDA -->
+      <aside
+        class="simple-map-legend"
+        aria-label="Daftar lokasi pada peta"
+      >
+        <h3>Legenda</h3>
+
+        <p>
+          Klik destinasi untuk mengarahkan peta ke lokasi.
+        </p>
+
+        <div
+          id="mapPlaceList"
+          class="map-place-list"
+        ></div>
+      </aside>
+
     </div>
   </div>
 </section>
