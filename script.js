@@ -1,5 +1,12 @@
 /* =========================================================
    SCRIPT HALAMAN UTAMA QR-ONE ARGOSARI
+
+   Perbaikan utama:
+   1. Peta memenuhi seluruh wadah.
+   2. Ukuran Leaflet dihitung setelah layout selesai.
+   3. Pencarian tidak melakukan zoom setiap mengetik.
+   4. Resize tidak menjalankan invalidateSize berulang-ulang.
+   5. Pergerakan peta dan perpindahan marker lebih halus.
 ========================================================= */
 
 const $ = (selector, parent = document) =>
@@ -8,15 +15,25 @@ const $ = (selector, parent = document) =>
 const $$ = (selector, parent = document) =>
   [...parent.querySelectorAll(selector)];
 
+const FALLBACK_IMAGE = "assets/hero-argosari.svg";
+
 const appState = {
   activeCategory: "semua",
   search: "",
   map: null,
+  tileLayer: null,
   markers: new Map(),
   userMarker: null,
   sliderIndex: 0,
-  mapResizeTimer: null
+  mapResizeTimer: null,
+  searchTimer: null,
+  initialMapFitDone: false
 };
+
+
+/* =========================================================
+   UTILITAS
+========================================================= */
 
 function escapeHtml(value) {
   return String(value ?? "")
@@ -27,6 +44,7 @@ function escapeHtml(value) {
     .replaceAll("'", "&#039;");
 }
 
+
 function categoryLabel(categoryId) {
   return (
     CATEGORIES.find(
@@ -35,11 +53,13 @@ function categoryLabel(categoryId) {
   );
 }
 
+
 function detailUrl(destination) {
   return `detail.html?id=${encodeURIComponent(
     destination.id
   )}`;
 }
+
 
 function routeUrl(destination) {
   return (
@@ -47,6 +67,7 @@ function routeUrl(destination) {
     `&destination=${destination.lat},${destination.lng}`
   );
 }
+
 
 function whatsappUrl(
   customMessage = SITE_CONFIG.whatsappMessage
@@ -56,6 +77,7 @@ function whatsappUrl(
     `?text=${encodeURIComponent(customMessage)}`
   );
 }
+
 
 function filteredDestinations() {
   const keyword =
@@ -79,11 +101,20 @@ function filteredDestinations() {
       .toLowerCase();
 
     const matchesKeyword =
-      !keyword || searchableText.includes(keyword);
+      !keyword ||
+      searchableText.includes(keyword);
 
-    return matchesCategory && matchesKeyword;
+    return (
+      matchesCategory &&
+      matchesKeyword
+    );
   });
 }
+
+
+/* =========================================================
+   GAMBAR CADANGAN
+========================================================= */
 
 function setupImageFallbacks() {
   document.addEventListener(
@@ -91,22 +122,32 @@ function setupImageFallbacks() {
     (event) => {
       const image = event.target;
 
-      if (!(image instanceof HTMLImageElement)) {
-        return;
-      }
-
       if (
-        image.dataset.fallbackApplied === "true"
+        !(image instanceof HTMLImageElement)
       ) {
         return;
       }
 
-      image.dataset.fallbackApplied = "true";
-      image.src = SITE_CONFIG.fallbackImage;
+      if (
+        image.dataset.fallbackApplied ===
+        "true"
+      ) {
+        return;
+      }
+
+      image.dataset.fallbackApplied =
+        "true";
+
+      image.src = FALLBACK_IMAGE;
     },
     true
   );
 }
+
+
+/* =========================================================
+   NAVIGASI
+========================================================= */
 
 function setupNavigation() {
   const toggle = $(".menu-toggle");
@@ -116,24 +157,27 @@ function setupNavigation() {
     return;
   }
 
-  const closeMenu = () => {
+  function closeMenu() {
     links.classList.remove("open");
 
     toggle.setAttribute(
       "aria-expanded",
       "false"
     );
-  };
+  }
 
-  toggle.addEventListener("click", () => {
-    const isOpen =
-      links.classList.toggle("open");
+  toggle.addEventListener(
+    "click",
+    () => {
+      const open =
+        links.classList.toggle("open");
 
-    toggle.setAttribute(
-      "aria-expanded",
-      String(isOpen)
-    );
-  });
+      toggle.setAttribute(
+        "aria-expanded",
+        String(open)
+      );
+    }
+  );
 
   $$("a", links).forEach((link) => {
     link.addEventListener(
@@ -145,7 +189,9 @@ function setupNavigation() {
   document.addEventListener(
     "click",
     (event) => {
-      if (!links.classList.contains("open")) {
+      if (
+        !links.classList.contains("open")
+      ) {
         return;
       }
 
@@ -170,6 +216,11 @@ function setupNavigation() {
   );
 }
 
+
+/* =========================================================
+   SLIDER
+========================================================= */
+
 function renderSlider() {
   const track = $("#sliderTrack");
 
@@ -177,47 +228,44 @@ function renderSlider() {
     return;
   }
 
-  const sliderItems =
-    DESTINATIONS.slice(0, 5);
+  track.innerHTML = DESTINATIONS
+    .slice(0, 5)
+    .map(
+      (item, index) => `
+        <article
+          class="slide-card ${
+            index === appState.sliderIndex
+              ? "active"
+              : ""
+          }"
+          data-slide="${index}"
+        >
+          <img
+            src="${escapeHtml(item.image)}"
+            alt="${escapeHtml(item.title)}"
+            loading="lazy"
+          />
 
-  const item =
-    sliderItems[appState.sliderIndex];
+          <span>
+            ${escapeHtml(item.icon)}
+            ${escapeHtml(
+              categoryLabel(item.category)
+            )}
+          </span>
 
-  if (!item) {
-    return;
-  }
+          <h3>
+            ${escapeHtml(item.title)}
+          </h3>
 
-  track.innerHTML = `
-    <article class="slide-card active">
-      <img
-        src="${escapeHtml(item.image)}"
-        alt="${escapeHtml(item.title)}"
-        loading="lazy"
-      />
-
-      <div class="slide-content">
-        <span>
-          ${escapeHtml(item.icon)}
-          ${escapeHtml(
-            categoryLabel(item.category)
-          )}
-        </span>
-
-        <h3>
-          ${escapeHtml(item.title)}
-        </h3>
-
-        <p>
-          ${escapeHtml(item.summary)}
-        </p>
-
-        <a href="${detailUrl(item)}">
-          Lihat informasi →
-        </a>
-      </div>
-    </article>
-  `;
+          <p>
+            ${escapeHtml(item.summary)}
+          </p>
+        </article>
+      `
+    )
+    .join("");
 }
+
 
 function setupSlider() {
   const previousButton =
@@ -227,7 +275,10 @@ function setupSlider() {
     $(".slider-btn.next");
 
   const itemCount =
-    Math.min(DESTINATIONS.length, 5);
+    Math.min(
+      DESTINATIONS.length,
+      5
+    );
 
   if (
     !previousButton ||
@@ -237,7 +288,7 @@ function setupSlider() {
     return;
   }
 
-  const move = (direction) => {
+  function move(direction) {
     appState.sliderIndex =
       (
         appState.sliderIndex +
@@ -246,7 +297,7 @@ function setupSlider() {
       ) % itemCount;
 
     renderSlider();
-  };
+  }
 
   previousButton.addEventListener(
     "click",
@@ -260,6 +311,11 @@ function setupSlider() {
 
   renderSlider();
 }
+
+
+/* =========================================================
+   LEGENDA
+========================================================= */
 
 function renderLegend() {
   const target = $("#legendList");
@@ -307,16 +363,27 @@ function renderLegend() {
             "semua";
 
           renderLegend();
+
           renderDestinationCards();
 
+          /*
+           * Kamera peta menyesuaikan hanya
+           * setelah kategori dipilih.
+           */
           updateMarkers({
-            fit: true
+            fit: true,
+            animate: true
           });
         }
       );
     }
   );
 }
+
+
+/* =========================================================
+   KARTU DESTINASI
+========================================================= */
 
 function renderDestinationCards() {
   const target =
@@ -346,59 +413,61 @@ function renderDestinationCards() {
     return;
   }
 
-  target.innerHTML = items.map(
-    (item) => `
-      <article class="tour-card">
-        <div class="tour-image">
-          <img
-            src="${escapeHtml(item.image)}"
-            alt="${escapeHtml(item.title)}"
-            loading="lazy"
-          />
+  target.innerHTML = items
+    .map(
+      (item) => `
+        <article class="tour-card">
+          <div class="tour-image">
+            <img
+              src="${escapeHtml(item.image)}"
+              alt="${escapeHtml(item.title)}"
+              loading="lazy"
+            />
 
-          <span class="tour-badge">
-            ${escapeHtml(item.status)}
-          </span>
-        </div>
-
-        <div class="tour-body">
-          <p class="tour-category">
-            ${escapeHtml(item.icon)}
-            ${escapeHtml(
-              categoryLabel(item.category)
-            )}
-          </p>
-
-          <h3>
-            ${escapeHtml(item.title)}
-          </h3>
-
-          <p>
-            ${escapeHtml(item.summary)}
-          </p>
-
-          <div class="card-actions">
-            <button
-              class="btn btn-soft small"
-              type="button"
-              data-focus="${escapeHtml(
-                item.id
-              )}"
-            >
-              Lihat di Peta
-            </button>
-
-            <a
-              class="btn btn-primary small"
-              href="${detailUrl(item)}"
-            >
-              Informasi Lengkap
-            </a>
+            <span class="tour-badge">
+              ${escapeHtml(item.status)}
+            </span>
           </div>
-        </div>
-      </article>
-    `
-  ).join("");
+
+          <div class="tour-body">
+            <p class="tour-category">
+              ${escapeHtml(item.icon)}
+              ${escapeHtml(
+                categoryLabel(item.category)
+              )}
+            </p>
+
+            <h3>
+              ${escapeHtml(item.title)}
+            </h3>
+
+            <p>
+              ${escapeHtml(item.summary)}
+            </p>
+
+            <div class="card-actions">
+              <button
+                class="btn btn-soft small"
+                type="button"
+                data-focus="${escapeHtml(
+                  item.id
+                )}"
+              >
+                Lihat di Peta
+              </button>
+
+              <a
+                class="btn btn-primary small"
+                href="${detailUrl(item)}"
+              >
+                Informasi lebih lanjut
+              </a>
+            </div>
+          </div>
+        </article>
+      `
+    )
+    .join("");
 
   $$(
     "[data-focus]",
@@ -415,6 +484,11 @@ function renderDestinationCards() {
   });
 }
 
+
+/* =========================================================
+   TAUTAN INFORMASI
+========================================================= */
+
 function renderImportantLinks() {
   const target =
     $("#importantLinks");
@@ -423,33 +497,41 @@ function renderImportantLinks() {
     return;
   }
 
-  target.innerHTML = IMPORTANT_LINKS.map(
-    (link) => `
-      <a
-        class="info-link"
-        href="${escapeHtml(link.url)}"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <span class="info-icon">
-          ${escapeHtml(link.icon)}
-        </span>
+  target.innerHTML =
+    IMPORTANT_LINKS.map(
+      (link) => `
+        <a
+          class="info-link"
+          href="${escapeHtml(link.url)}"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <span class="info-icon">
+            ${escapeHtml(link.icon)}
+          </span>
 
-        <strong>
-          ${escapeHtml(link.title)}
-        </strong>
+          <strong>
+            ${escapeHtml(link.title)}
+          </strong>
 
-        <p>
-          ${escapeHtml(link.description)}
-        </p>
+          <p>
+            ${escapeHtml(
+              link.description
+            )}
+          </p>
 
-        <em>
-          Buka informasi →
-        </em>
-      </a>
-    `
-  ).join("");
+          <em>
+            Buka informasi →
+          </em>
+        </a>
+      `
+    ).join("");
 }
+
+
+/* =========================================================
+   MARKER DAN POPUP
+========================================================= */
 
 function markerHtml(item) {
   return `
@@ -464,6 +546,7 @@ function markerHtml(item) {
     </div>
   `;
 }
+
 
 function popupHtml(item) {
   return `
@@ -493,14 +576,30 @@ function popupHtml(item) {
   `;
 }
 
-function showMapFallback() {
+
+/* =========================================================
+   PESAN PETA GAGAL
+========================================================= */
+
+function showMapFallback(message) {
   const fallback =
     $("#mapFallback");
 
-  if (fallback) {
-    fallback.hidden = false;
+  if (!fallback) {
+    return;
   }
+
+  if (message) {
+    fallback.textContent = message;
+  }
+
+  fallback.hidden = false;
 }
+
+
+/* =========================================================
+   PERHITUNGAN UKURAN PETA
+========================================================= */
 
 function refreshMapSize(delay = 0) {
   if (!appState.map) {
@@ -513,22 +612,51 @@ function refreshMapSize(delay = 0) {
 
   appState.mapResizeTimer =
     window.setTimeout(() => {
+      /*
+       * Hentikan animasi sebelumnya agar
+       * tidak bertumpuk.
+       */
+      appState.map.stop();
+
       appState.map.invalidateSize({
         pan: false,
-        animate: false
+        animate: false,
+        debounceMoveend: true
       });
     }, delay);
 }
+
+
+/* =========================================================
+   PEMBUATAN PETA
+========================================================= */
 
 function initMap() {
   const mapElement =
     $("#map");
 
+  if (!mapElement) {
+    console.error(
+      "Elemen #map tidak ditemukan."
+    );
+
+    return;
+  }
+
   if (
-    !mapElement ||
     typeof window.L === "undefined"
   ) {
-    showMapFallback();
+    showMapFallback(
+      "Peta tidak dapat dimuat karena Leaflet gagal dibuka. Periksa koneksi internet lalu muat ulang halaman."
+    );
+
+    return;
+  }
+
+  /*
+   * Mencegah peta dibuat dua kali.
+   */
+  if (appState.map) {
     return;
   }
 
@@ -536,31 +664,111 @@ function initMap() {
     appState.map = L.map(
       mapElement,
       {
-        scrollWheelZoom: false,
+        center:
+          SITE_CONFIG.mapCenter,
+
+        zoom:
+          SITE_CONFIG.mapZoom,
+
         zoomControl: true,
-        preferCanvas: true,
-        tap: true
+
+        attributionControl: true,
+
+        scrollWheelZoom: true,
+
+        doubleClickZoom: true,
+
+        boxZoom: true,
+
+        keyboard: true,
+
+        dragging: true,
+
+        /*
+         * Animasi bawaan Leaflet.
+         */
+        zoomAnimation: true,
+
+        fadeAnimation: true,
+
+        markerZoomAnimation: true,
+
+        /*
+         * Momentum saat peta digeser.
+         */
+        inertia: true,
+
+        inertiaDeceleration: 3000,
+
+        inertiaMaxSpeed: 1500,
+
+        easeLinearity: 0.25,
+
+        /*
+         * Roda mouse tidak terlalu sensitif.
+         */
+        wheelDebounceTime: 40,
+
+        wheelPxPerZoomLevel: 90,
+
+        preferCanvas: false
       }
-    ).setView(
-      SITE_CONFIG.mapCenter,
-      SITE_CONFIG.mapZoom
     );
 
-    L.tileLayer(
-      "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-      {
-        maxZoom: 19,
+    appState.tileLayer =
+      L.tileLayer(
+        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        {
+          minZoom: 3,
 
-        attribution:
-          SITE_CONFIG.tileAttribution
+          maxZoom: 19,
+
+          /*
+           * Mempertahankan tile di sekitar
+           * layar agar drag lebih lancar.
+           */
+          keepBuffer: 4,
+
+          /*
+           * Tile tetap diperbarui saat
+           * pengguna menggeser peta.
+           */
+          updateWhenIdle: false,
+
+          /*
+           * Mengurangi pekerjaan saat
+           * animasi zoom berlangsung.
+           */
+          updateWhenZooming: false,
+
+          detectRetina: false,
+
+          attribution:
+            SITE_CONFIG.tileAttribution
+        }
+      );
+
+    appState.tileLayer.addTo(
+      appState.map
+    );
+
+    appState.tileLayer.on(
+      "tileerror",
+      (event) => {
+        console.warn(
+          "Tile peta gagal dimuat:",
+          event?.tile?.src || event
+        );
       }
-    ).addTo(appState.map);
+    );
 
     DESTINATIONS.forEach((item) => {
       const marker = L.marker(
         [item.lat, item.lng],
         {
           title: item.title,
+
+          riseOnHover: true,
 
           icon: L.divIcon({
             html: markerHtml(item),
@@ -578,7 +786,12 @@ function initMap() {
       ).bindPopup(
         popupHtml(item),
         {
-          maxWidth: 290
+          maxWidth: 290,
+
+          autoPan: true,
+
+          autoPanPadding:
+            [24, 24]
         }
       );
 
@@ -590,26 +803,58 @@ function initMap() {
       );
     });
 
-    appState.map.whenReady(() => {
-      refreshMapSize(80);
+    /*
+     * Tunggu dua frame sampai CSS Grid dan
+     * ukuran .map-wrap selesai dihitung.
+     */
+    function finishInitialLayout() {
+      refreshMapSize(0);
 
-      updateMarkers({
-        fit: true
-      });
+      window.setTimeout(() => {
+        if (
+          !appState.initialMapFitDone
+        ) {
+          updateMarkers({
+            fit: true,
+            animate: false
+          });
+
+          appState.initialMapFitDone =
+            true;
+        }
+      }, 60);
+    }
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(
+        finishInitialLayout
+      );
+    });
+
+    appState.map.whenReady(() => {
+      refreshMapSize(120);
     });
   } catch (error) {
     console.error(
-      "Peta gagal dimuat:",
+      "Peta gagal dibuat:",
       error
     );
 
-    showMapFallback();
+    showMapFallback(
+      "Peta tidak dapat dibuat. Muat ulang halaman atau periksa Console browser."
+    );
   }
 }
 
+
+/* =========================================================
+   FILTER MARKER
+========================================================= */
+
 function updateMarkers(
   {
-    fit = true
+    fit = false,
+    animate = false
   } = {}
 ) {
   if (!appState.map) {
@@ -634,19 +879,35 @@ function updateMarkers(
       return;
     }
 
-    if (visibleIds.has(item.id)) {
-      if (
-        !appState.map.hasLayer(marker)
-      ) {
-        marker.addTo(appState.map);
-      }
-    } else if (
-      appState.map.hasLayer(marker)
+    const shouldBeVisible =
+      visibleIds.has(item.id);
+
+    const currentlyVisible =
+      appState.map.hasLayer(marker);
+
+    /*
+     * Marker hanya ditambah atau dihapus
+     * jika statusnya berubah.
+     */
+    if (
+      shouldBeVisible &&
+      !currentlyVisible
+    ) {
+      marker.addTo(appState.map);
+    }
+
+    if (
+      !shouldBeVisible &&
+      currentlyVisible
     ) {
       appState.map.removeLayer(marker);
     }
   });
 
+  /*
+   * Jangan mengubah posisi kamera jika
+   * fit bernilai false.
+   */
   if (
     !fit ||
     visibleItems.length === 0
@@ -656,15 +917,17 @@ function updateMarkers(
 
   refreshMapSize(0);
 
+  appState.map.stop();
+
   if (visibleItems.length === 1) {
-    const onlyItem =
+    const item =
       visibleItems[0];
 
     appState.map.setView(
-      [onlyItem.lat, onlyItem.lng],
+      [item.lat, item.lng],
       15,
       {
-        animate: false
+        animate
       }
     );
 
@@ -684,12 +947,23 @@ function updateMarkers(
   appState.map.fitBounds(
     bounds,
     {
-      padding: [42, 42],
+      paddingTopLeft:
+        [44, 44],
+
+      paddingBottomRight:
+        [44, 44],
+
       maxZoom: 14,
-      animate: false
+
+      animate
     }
   );
 }
+
+
+/* =========================================================
+   FOKUS DESTINASI
+========================================================= */
 
 function focusDestination(id) {
   const destination =
@@ -708,6 +982,8 @@ function focusDestination(id) {
     return;
   }
 
+  appState.map.stop();
+
   appState.activeCategory =
     "semua";
 
@@ -721,37 +997,51 @@ function focusDestination(id) {
   }
 
   renderLegend();
+
   renderDestinationCards();
 
   updateMarkers({
     fit: false
   });
 
-  $("#peta")?.scrollIntoView({
-    behavior: "smooth",
-    block: "start"
-  });
-
-  window.setTimeout(() => {
-    appState.map.invalidateSize({
-      pan: false,
-      animate: false
+  document
+    .getElementById("peta")
+    ?.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
     });
 
-    appState.map.setView(
+  window.setTimeout(() => {
+    refreshMapSize(0);
+
+    appState.map.stop();
+
+    /*
+     * flyTo memberi perpindahan
+     * yang lebih halus.
+     */
+    appState.map.flyTo(
       [
         destination.lat,
         destination.lng
       ],
       16,
       {
-        animate: true
+        animate: true,
+        duration: 0.65
       }
     );
 
-    marker.openPopup();
-  }, 550);
+    window.setTimeout(() => {
+      marker.openPopup();
+    }, 700);
+  }, 480);
 }
+
+
+/* =========================================================
+   PENCARIAN
+========================================================= */
 
 function setupSearch() {
   const input =
@@ -761,29 +1051,67 @@ function setupSearch() {
     return;
   }
 
-  let searchTimer;
-
   input.addEventListener(
     "input",
     () => {
       window.clearTimeout(
-        searchTimer
+        appState.searchTimer
       );
 
-      searchTimer =
+      /*
+       * Debounce mencegah fungsi dijalankan
+       * pada setiap penekanan tombol.
+       */
+      appState.searchTimer =
         window.setTimeout(() => {
           appState.search =
-            input.value;
+            input.value.trim();
 
           renderDestinationCards();
 
+          /*
+           * Marker diperbarui, tetapi kamera
+           * peta tidak langsung berpindah.
+           */
           updateMarkers({
-            fit: true
+            fit: false
           });
-        }, 160);
+        }, 250);
+    }
+  );
+
+  /*
+   * Peta baru menyesuaikan lokasi
+   * ketika pengguna menekan Enter.
+   */
+  input.addEventListener(
+    "keydown",
+    (event) => {
+      if (
+        event.key !== "Enter"
+      ) {
+        return;
+      }
+
+      event.preventDefault();
+
+      appState.search =
+        input.value.trim();
+
+      renderDestinationCards();
+
+      updateMarkers({
+        fit: true,
+        animate: true
+      });
     }
   );
 }
+
+
+/* =========================================================
+   LOKASI PENGGUNA
+========================================================= */
 
 function setupLocateButton() {
   const button =
@@ -807,7 +1135,7 @@ function setupLocateButton() {
         return;
       }
 
-      const defaultText =
+      const defaultLabel =
         "📍 Tampilkan lokasi saya";
 
       button.disabled = true;
@@ -833,12 +1161,20 @@ function setupLocateButton() {
 
             appState.userMarker =
               L.circleMarker(
-                [latitude, longitude],
+                [
+                  latitude,
+                  longitude
+                ],
                 {
                   radius: 9,
+
                   weight: 4,
+
                   color: "#ffffff",
-                  fillColor: "#2467d1",
+
+                  fillColor:
+                    "#2467d1",
+
                   fillOpacity: 1
                 }
               )
@@ -849,18 +1185,26 @@ function setupLocateButton() {
 
             refreshMapSize(0);
 
-            appState.map.setView(
-              [latitude, longitude],
-              15
+            appState.map.flyTo(
+              [
+                latitude,
+                longitude
+              ],
+              15,
+              {
+                animate: true,
+                duration: 0.65
+              }
             );
 
             appState.userMarker
               .openPopup();
 
-            button.disabled = false;
+            button.disabled =
+              false;
 
             button.textContent =
-              defaultText;
+              defaultLabel;
           },
 
           () => {
@@ -868,15 +1212,18 @@ function setupLocateButton() {
               "Lokasi tidak dapat diakses. Izinkan akses lokasi pada browser lalu coba kembali."
             );
 
-            button.disabled = false;
+            button.disabled =
+              false;
 
             button.textContent =
-              defaultText;
+              defaultLabel;
           },
 
           {
             enableHighAccuracy: true,
+
             timeout: 10000,
+
             maximumAge: 60000
           }
         );
@@ -884,8 +1231,13 @@ function setupLocateButton() {
   );
 }
 
+
+/* =========================================================
+   KONTAK
+========================================================= */
+
 function setupContactLinks() {
-  const mainUrl =
+  const url =
     whatsappUrl();
 
   [
@@ -897,33 +1249,81 @@ function setupContactLinks() {
       document.getElementById(id);
 
     if (element) {
-      element.href = mainUrl;
+      element.href = url;
     }
   });
 }
 
+
+/* =========================================================
+   PENANGANAN RESIZE
+========================================================= */
+
 function setupMapResizeHandling() {
-  const mapWrap =
-    $(".map-wrap");
+  let windowResizeTimer = null;
 
-  window.addEventListener(
-    "load",
-    () => {
-      refreshMapSize(200);
-    }
-  );
+  function handlePageReady() {
+    refreshMapSize(120);
+  }
 
+  if (
+    document.readyState ===
+    "complete"
+  ) {
+    handlePageReady();
+  } else {
+    window.addEventListener(
+      "load",
+      handlePageReady,
+      {
+        once: true
+      }
+    );
+  }
+
+  /*
+   * Resize hanya dihitung setelah pengguna
+   * selesai mengubah ukuran browser.
+   */
   window.addEventListener(
     "resize",
     () => {
-      refreshMapSize(120);
+      window.clearTimeout(
+        windowResizeTimer
+      );
+
+      windowResizeTimer =
+        window.setTimeout(() => {
+          refreshMapSize(0);
+        }, 180);
+    },
+    {
+      passive: true
     }
   );
 
   window.addEventListener(
     "orientationchange",
     () => {
-      refreshMapSize(250);
+      refreshMapSize(300);
+    },
+    {
+      passive: true
+    }
+  );
+
+  /*
+   * Hitung ulang ketika tombol menuju
+   * bagian peta ditekan.
+   */
+  $$('a[href="#peta"]').forEach(
+    (link) => {
+      link.addEventListener(
+        "click",
+        () => {
+          refreshMapSize(420);
+        }
+      );
     }
   );
 
@@ -939,33 +1339,49 @@ function setupMapResizeHandling() {
     }
   );
 
-  $$('a[href="#peta"]').forEach(
-    (link) => {
-      link.addEventListener(
-        "click",
-        () => {
-          refreshMapSize(450);
-        }
-      );
-    }
-  );
+  /*
+   * Hitung ukuran ketika section peta
+   * benar-benar masuk ke layar.
+   */
+  const mapSection =
+    document.getElementById("peta");
 
   if (
-    "ResizeObserver" in window &&
-    mapWrap
+    "IntersectionObserver" in window &&
+    mapSection
   ) {
     const observer =
-      new ResizeObserver(() => {
-        refreshMapSize(80);
-      });
+      new IntersectionObserver(
+        (entries) => {
+          const visible =
+            entries.some(
+              (entry) =>
+                entry.isIntersecting
+            );
 
-    observer.observe(mapWrap);
+          if (!visible) {
+            return;
+          }
+
+          refreshMapSize(80);
+        },
+        {
+          root: null,
+          threshold: 0.05
+        }
+      );
+
+    observer.observe(mapSection);
   }
 
+  /*
+   * Font Google dapat mengubah ukuran
+   * layout setelah selesai dimuat.
+   */
   if (document.fonts?.ready) {
     document.fonts.ready.then(
       () => {
-        refreshMapSize(60);
+        refreshMapSize(80);
       }
     );
   }
@@ -977,24 +1393,40 @@ function setupMapResizeHandling() {
   }
 }
 
+
+/* =========================================================
+   MENJALANKAN WEBSITE
+========================================================= */
+
 function boot() {
   setupImageFallbacks();
+
   setupNavigation();
+
   setupSlider();
 
   renderLegend();
+
   renderDestinationCards();
+
   renderImportantLinks();
 
   setupSearch();
+
   setupLocateButton();
+
   setupContactLinks();
 
   initMap();
+
   setupMapResizeHandling();
 }
 
+
 document.addEventListener(
   "DOMContentLoaded",
-  boot
+  boot,
+  {
+    once: true
+  }
 );
