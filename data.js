@@ -28,7 +28,7 @@ const DESTINATIONS = [
     title: "Puncak B29 / Negeri di Atas Awan",
     category: "wisata",
     icon: "⛰️",
-    image: "assets/photos/b29.webp",
+    image: "assets/b29.webp",
     lat: -7.959141,
     lng: 112.994822,
     status: "Destinasi Unggulan",
