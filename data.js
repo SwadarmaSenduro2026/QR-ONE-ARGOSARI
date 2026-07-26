@@ -57,7 +57,7 @@ const DESTINATIONS = [
   },
   {
     id: "kampung-tengger",
-    title: "Argsari Kampung Budaya Tengger",
+    title: "Argosari Kampung Budaya Tengger",
     category: "budaya",
     icon: "🏘️",
     image: "assets/wisata budaya.webp",
