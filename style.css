@@ -457,7 +457,41 @@ input:focus-visible {
   pointer-events: none;
 }
 
-.hero-grid {
+.hero-grid 
+/* Teks pada bagian kiri hero */
+
+.hero-content {
+  width: 100%;
+
+  text-align: center;
+}
+
+
+.hero-content .kicker {
+  text-align: center;
+}
+
+
+.hero-content h1 {
+  margin-right: auto;
+  margin-left: auto;
+
+  text-align: center;
+}
+
+
+.hero-text {
+  margin-right: auto;
+  margin-left: auto;
+
+  text-align: center;
+}
+
+
+.hero-actions {
+  justify-content: center;
+}
+{
   position: relative;
 
   z-index: 1;
