@@ -129,16 +129,50 @@ function renderDestinationCards() {
 }
 
 function renderImportantLinks() {
-  const grid = $("#importantLinks");
-  if (!grid) return;
+  const target =
+    document.getElementById("importantLinks");
 
-  grid.innerHTML = IMPORTANT_LINKS.map((link) => `
-    <a class="info-link" href="${escapeHtml(link.url)}" target="_blank" rel="noopener noreferrer">
-      <span class="info-icon">${escapeHtml(link.icon)}</span>
-      <strong>${escapeHtml(link.title)}</strong>
-      <p>${escapeHtml(link.description)}</p>
-      <em>Buka informasi →</em>
-    </a>`).join("");
+  if (!target) {
+    return;
+  }
+
+  target.innerHTML = IMPORTANT_LINKS
+    .map(
+      (link) => `
+        <a
+          class="info-link"
+          href="${link.url}"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Buka ${link.title}"
+        >
+          <div class="info-illustration">
+            <img
+              src="${link.image}"
+              alt="${link.imageAlt || link.title}"
+              width="600"
+              height="400"
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+
+          <strong>
+            ${link.title}
+          </strong>
+
+          <p>
+            ${link.description}
+          </p>
+
+          <span class="info-link-action">
+            Buka informasi
+            <span aria-hidden="true">→</span>
+          </span>
+        </a>
+      `
+    )
+    .join("");
 }
 
 function popupHtml(item) {
