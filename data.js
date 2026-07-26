@@ -57,10 +57,10 @@ const DESTINATIONS = [
   },
   {
     id: "kampung-tengger",
-    title: "Kampung Wisata dan Budaya Tengger",
+    title: "Argsari Kampung Budaya Tengger",
     category: "budaya",
     icon: "🏘️",
-    image: "assets/photos/kampung-tengger.webp",
+    image: "assets/wisata budaya.webp",
     lat: -7.9902666,
     lng: 113.013113,
     status: "Wisata Budaya",
@@ -73,7 +73,7 @@ const DESTINATIONS = [
   },
   {
     id: "homestay-ojek",
-    title: "Homestay dan Ojek Wisata",
+    title: "Homestay",
     category: "layanan",
     icon: "🏡",
     image: "assets/photos/homestay-ojek.webp",
