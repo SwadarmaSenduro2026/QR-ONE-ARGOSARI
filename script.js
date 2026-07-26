@@ -1,835 +1,292 @@
 /* =========================================================
-   QR-ONE ARGOSARI
-   Script halaman utama dengan peta Leaflet sederhana
+   QR-ONE ARGOSARI — SCRIPT HALAMAN UTAMA
+   Peta sengaja dibuat sederhana agar ringan dan stabil.
 ========================================================= */
 
-const $ = (selector, parent = document) =>
-  parent.querySelector(selector);
+const $ = (selector, parent = document) => parent.querySelector(selector);
+const $$ = (selector, parent = document) => [...parent.querySelectorAll(selector)];
 
-const $$ = (selector, parent = document) =>
-  [...parent.querySelectorAll(selector)];
-
-
-/* =========================================================
-   STATUS APLIKASI
-========================================================= */
-
-const appState = {
+const state = {
   map: null,
-  markerLayer: null,
+  markerGroup: null,
   markers: new Map(),
   sliderIndex: 0,
   resizeTimer: null
 };
 
-
-/* =========================================================
-   FUNGSI DASAR
-========================================================= */
-
-function text(value) {
-  return String(value ?? "");
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
 }
 
-
-function categoryLabel(categoryId) {
-  return (
-    CATEGORIES.find(
-      (category) => category.id === categoryId
-    )?.label || categoryId
-  );
+function categoryLabel(id) {
+  return CATEGORIES[id] || id;
 }
 
-
-function detailUrl(destination) {
-  return (
-    `detail.html?id=${encodeURIComponent(destination.id)}`
-  );
+function detailUrl(item) {
+  return `detail.html?id=${encodeURIComponent(item.id)}`;
 }
 
-
-function routeUrl(destination) {
-  return (
-    "https://www.google.com/maps/dir/?api=1" +
-    `&destination=${destination.lat},${destination.lng}`
-  );
+function routeUrl(item) {
+  return `https://www.google.com/maps/dir/?api=1&destination=${item.lat},${item.lng}`;
 }
 
-
-function whatsappUrl(
-  customMessage = SITE_CONFIG.whatsappMessage
-) {
-  return (
-    `https://wa.me/${SITE_CONFIG.whatsappNumber}` +
-    `?text=${encodeURIComponent(customMessage)}`
-  );
+function whatsappUrl(message = SITE_CONFIG.whatsappMessage) {
+  return `https://wa.me/${SITE_CONFIG.whatsappNumber}?text=${encodeURIComponent(message)}`;
 }
-
-
-/* =========================================================
-   GAMBAR CADANGAN
-========================================================= */
 
 function setupImageFallbacks() {
-  document.addEventListener(
-    "error",
-    (event) => {
-      const image = event.target;
-
-      if (!(image instanceof HTMLImageElement)) {
-        return;
-      }
-
-      if (image.dataset.fallbackApplied === "true") {
-        return;
-      }
-
-      image.dataset.fallbackApplied = "true";
-
-      image.src =
-        SITE_CONFIG.fallbackImage ||
-        "assets/hero-argosari.svg";
-    },
-    true
-  );
+  document.addEventListener("error", (event) => {
+    const image = event.target;
+    if (!(image instanceof HTMLImageElement)) return;
+    if (image.dataset.fallbackApplied === "true") return;
+    image.dataset.fallbackApplied = "true";
+    image.src = SITE_CONFIG.fallbackImage;
+  }, true);
 }
-
-
-/* =========================================================
-   NAVIGASI
-========================================================= */
 
 function setupNavigation() {
   const toggle = $(".menu-toggle");
   const links = $("#navLinks");
+  if (!toggle || !links) return;
 
-  if (!toggle || !links) {
-    return;
-  }
-
-  function closeMenu() {
+  const closeMenu = () => {
     links.classList.remove("open");
-
-    toggle.setAttribute(
-      "aria-expanded",
-      "false"
-    );
-  }
+    toggle.setAttribute("aria-expanded", "false");
+  };
 
   toggle.addEventListener("click", () => {
-    const isOpen =
-      links.classList.toggle("open");
-
-    toggle.setAttribute(
-      "aria-expanded",
-      String(isOpen)
-    );
+    const isOpen = links.classList.toggle("open");
+    toggle.setAttribute("aria-expanded", String(isOpen));
   });
 
-  $$("a", links).forEach((link) => {
-    link.addEventListener(
-      "click",
-      closeMenu
-    );
+  $$("a", links).forEach((link) => link.addEventListener("click", closeMenu));
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") closeMenu();
   });
-
-  document.addEventListener(
-    "click",
-    (event) => {
-      if (!links.classList.contains("open")) {
-        return;
-      }
-
-      if (
-        links.contains(event.target) ||
-        toggle.contains(event.target)
-      ) {
-        return;
-      }
-
-      closeMenu();
-    }
-  );
-
-  document.addEventListener(
-    "keydown",
-    (event) => {
-      if (event.key === "Escape") {
-        closeMenu();
-      }
-    }
-  );
 }
-
-
-/* =========================================================
-   SLIDER TENTANG ARGOSARI
-========================================================= */
 
 function renderSlider() {
   const track = $("#sliderTrack");
-
-  if (!track) {
-    return;
-  }
-
-  const items = DESTINATIONS.slice(0, 5);
-
-  const currentItem =
-    items[appState.sliderIndex];
-
-  if (!currentItem) {
-    track.innerHTML = "";
-    return;
-  }
+  if (!track || DESTINATIONS.length === 0) return;
+  const item = DESTINATIONS[state.sliderIndex % DESTINATIONS.length];
 
   track.innerHTML = `
-    <article class="slide-card active">
-      <img
-        src="${text(currentItem.image)}"
-        alt="${text(currentItem.title)}"
-        loading="lazy"
-      />
-
+    <article class="slide-card">
+      <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.title)}" loading="lazy" width="900" height="560" />
       <div class="slide-content">
-        <span>
-          ${text(currentItem.icon)}
-          ${text(categoryLabel(currentItem.category))}
-        </span>
-
-        <h3>
-          ${text(currentItem.title)}
-        </h3>
-
-        <p>
-          ${text(currentItem.summary)}
-        </p>
-
-        <a href="${detailUrl(currentItem)}">
-          Lihat informasi →
-        </a>
+        <span>${escapeHtml(item.icon)} ${escapeHtml(categoryLabel(item.category))}</span>
+        <h3>${escapeHtml(item.title)}</h3>
+        <p>${escapeHtml(item.summary)}</p>
+        <a href="${detailUrl(item)}">Lihat informasi →</a>
       </div>
-    </article>
-  `;
+    </article>`;
 }
 
-
 function setupSlider() {
-  const previousButton =
-    $(".slider-btn.prev");
+  const prev = $(".slider-btn.prev");
+  const next = $(".slider-btn.next");
+  if (!prev || !next || DESTINATIONS.length === 0) return;
 
-  const nextButton =
-    $(".slider-btn.next");
-
-  const itemCount =
-    Math.min(DESTINATIONS.length, 5);
-
-  if (
-    !previousButton ||
-    !nextButton ||
-    itemCount === 0
-  ) {
-    return;
-  }
-
-  function moveSlider(direction) {
-    appState.sliderIndex =
-      (
-        appState.sliderIndex +
-        direction +
-        itemCount
-      ) % itemCount;
-
+  const move = (direction) => {
+    state.sliderIndex = (state.sliderIndex + direction + DESTINATIONS.length) % DESTINATIONS.length;
     renderSlider();
-  }
+  };
 
-  previousButton.addEventListener(
-    "click",
-    () => moveSlider(-1)
-  );
-
-  nextButton.addEventListener(
-    "click",
-    () => moveSlider(1)
-  );
-
+  prev.addEventListener("click", () => move(-1));
+  next.addEventListener("click", () => move(1));
   renderSlider();
 }
 
-
-/* =========================================================
-   DAFTAR DESTINASI
-========================================================= */
-
 function renderDestinationCards() {
-  const target =
-    $("#destinationGrid");
+  const grid = $("#destinationGrid");
+  if (!grid) return;
 
-  if (!target) {
-    return;
-  }
-
-  target.innerHTML = DESTINATIONS.map(
-    (item) => `
-      <article class="tour-card">
-        <div class="tour-image">
-          <img
-            src="${text(item.image)}"
-            alt="${text(item.title)}"
-            loading="lazy"
-          />
-
-          <span class="tour-badge">
-            ${text(item.status)}
-          </span>
+  grid.innerHTML = DESTINATIONS.map((item) => `
+    <article class="tour-card">
+      <div class="tour-image">
+        <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.title)}" loading="lazy" width="900" height="560" />
+        <span class="tour-badge">${escapeHtml(item.status)}</span>
+      </div>
+      <div class="tour-body">
+        <p class="tour-category">${escapeHtml(item.icon)} ${escapeHtml(categoryLabel(item.category))}</p>
+        <h3>${escapeHtml(item.title)}</h3>
+        <p>${escapeHtml(item.summary)}</p>
+        <div class="card-actions">
+          <button class="btn btn-soft small" type="button" data-focus-map="${escapeHtml(item.id)}">Lihat di Peta</button>
+          <a class="btn btn-primary small" href="${detailUrl(item)}">Informasi Lengkap</a>
         </div>
+      </div>
+    </article>`).join("");
 
-        <div class="tour-body">
-          <p class="tour-category">
-            ${text(item.icon)}
-            ${text(categoryLabel(item.category))}
-          </p>
-
-          <h3>
-            ${text(item.title)}
-          </h3>
-
-          <p>
-            ${text(item.summary)}
-          </p>
-
-          <div class="card-actions">
-            <button
-              class="btn btn-soft small"
-              type="button"
-              data-focus-map="${text(item.id)}"
-            >
-              Lihat di Peta
-            </button>
-
-            <a
-              class="btn btn-primary small"
-              href="${detailUrl(item)}"
-            >
-              Informasi Lengkap
-            </a>
-          </div>
-        </div>
-      </article>
-    `
-  ).join("");
-
-  $$("[data-focus-map]", target).forEach(
-    (button) => {
-      button.addEventListener(
-        "click",
-        () => {
-          focusDestination(
-            button.dataset.focusMap
-          );
-        }
-      );
-    }
-  );
+  $$('[data-focus-map]', grid).forEach((button) => {
+    button.addEventListener("click", () => focusDestination(button.dataset.focusMap, true));
+  });
 }
-
-
-/* =========================================================
-   TAUTAN INFORMASI
-========================================================= */
 
 function renderImportantLinks() {
-  const target =
-    $("#importantLinks");
+  const grid = $("#importantLinks");
+  if (!grid) return;
 
-  if (!target) {
-    return;
-  }
-
-  target.innerHTML = IMPORTANT_LINKS.map(
-    (link) => `
-      <a
-        class="info-link"
-        href="${text(link.url)}"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <span class="info-icon">
-          ${text(link.icon)}
-        </span>
-
-        <strong>
-          ${text(link.title)}
-        </strong>
-
-        <p>
-          ${text(link.description)}
-        </p>
-
-        <em>
-          Buka informasi →
-        </em>
-      </a>
-    `
-  ).join("");
+  grid.innerHTML = IMPORTANT_LINKS.map((link) => `
+    <a class="info-link" href="${escapeHtml(link.url)}" target="_blank" rel="noopener noreferrer">
+      <span class="info-icon">${escapeHtml(link.icon)}</span>
+      <strong>${escapeHtml(link.title)}</strong>
+      <p>${escapeHtml(link.description)}</p>
+      <em>Buka informasi →</em>
+    </a>`).join("");
 }
-
-
-/* =========================================================
-   POPUP PETA
-========================================================= */
 
 function popupHtml(item) {
   return `
-    <div class="simple-popup">
-      <strong>
-        ${text(item.title)}
-      </strong>
-
-      <p>
-        ${text(item.summary)}
-      </p>
-
-      <div class="simple-popup-actions">
-        <a href="${detailUrl(item)}">
-          Detail
-        </a>
-
-        <a
-          href="${routeUrl(item)}"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Buka Rute
-        </a>
+    <div class="map-popup">
+      <strong>${escapeHtml(item.title)}</strong>
+      <p>${escapeHtml(item.summary)}</p>
+      <div class="map-popup-actions">
+        <a href="${detailUrl(item)}">Detail</a>
+        <a href="${routeUrl(item)}" target="_blank" rel="noopener noreferrer">Buka Rute</a>
       </div>
-    </div>
-  `;
+    </div>`;
 }
-
-
-/* =========================================================
-   LEGENDA DESTINASI PETA
-========================================================= */
 
 function renderMapPlaceList() {
-  const target =
-    $("#mapPlaceList");
+  const list = $("#mapPlaceList");
+  if (!list) return;
 
-  if (!target) {
-    return;
-  }
+  list.innerHTML = DESTINATIONS.map((item) => `
+    <button class="map-place-button" type="button" data-map-place="${escapeHtml(item.id)}">
+      <span class="map-place-icon">${escapeHtml(item.icon)}</span>
+      <span>
+        <strong>${escapeHtml(item.title)}</strong>
+        <small>${escapeHtml(categoryLabel(item.category))}</small>
+      </span>
+    </button>`).join("");
 
-  target.innerHTML = DESTINATIONS.map(
-    (item) => `
-      <button
-        class="map-place-button"
-        type="button"
-        data-map-place="${text(item.id)}"
-      >
-        <span class="map-place-icon">
-          ${text(item.icon)}
-        </span>
-
-        <span>
-          <strong>
-            ${text(item.title)}
-          </strong>
-
-          <small>
-            ${text(categoryLabel(item.category))}
-          </small>
-        </span>
-      </button>
-    `
-  ).join("");
-
-  $$("[data-map-place]", target).forEach(
-    (button) => {
-      button.addEventListener(
-        "click",
-        () => {
-          focusDestination(
-            button.dataset.mapPlace,
-            false
-          );
-        }
-      );
-    }
-  );
+  $$('[data-map-place]', list).forEach((button) => {
+    button.addEventListener("click", () => focusDestination(button.dataset.mapPlace, false));
+  });
 }
-
-
-/* =========================================================
-   PESAN KESALAHAN PETA
-========================================================= */
 
 function showMapError(message) {
-  const errorElement =
-    $("#mapError");
-
-  if (!errorElement) {
-    return;
-  }
-
-  if (message) {
-    errorElement.textContent = message;
-  }
-
-  errorElement.hidden = false;
+  const box = $("#mapError");
+  if (!box) return;
+  if (message) box.textContent = message;
+  box.hidden = false;
 }
-
-
-/* =========================================================
-   MEMPERBARUI UKURAN PETA
-========================================================= */
 
 function refreshMap(delay = 0) {
-  if (!appState.map) {
-    return;
-  }
-
-  window.clearTimeout(
-    appState.resizeTimer
-  );
-
-  appState.resizeTimer =
-    window.setTimeout(() => {
-      appState.map.invalidateSize({
-        pan: false,
-        animate: false
-      });
-    }, delay);
+  if (!state.map) return;
+  window.clearTimeout(state.resizeTimer);
+  state.resizeTimer = window.setTimeout(() => {
+    state.map.invalidateSize({ pan: false, animate: false });
+  }, delay);
 }
 
-
-/* =========================================================
-   MEMBUAT PETA SEDERHANA
-========================================================= */
-
 function initMap() {
-  const mapElement =
-    document.getElementById("argosariMap");
-
-  if (!mapElement) {
-    console.error(
-      "Elemen #argosariMap tidak ditemukan."
-    );
-
-    return;
-  }
-
+  const mapElement = document.getElementById("argosariMap");
+  if (!mapElement) return;
   if (typeof window.L === "undefined") {
-    showMapError(
-      "Leaflet tidak dapat dimuat. Periksa koneksi internet lalu muat ulang halaman."
-    );
-
-    return;
-  }
-
-  if (appState.map) {
+    showMapError("Leaflet tidak dapat dimuat. Periksa koneksi internet lalu muat ulang halaman.");
     return;
   }
 
   try {
-    /*
-     * Peta dibuat satu kali saja.
-     * Konfigurasinya sengaja sederhana.
-     */
-    appState.map = L.map(
-      "argosariMap",
-      {
-        zoomControl: true,
-        scrollWheelZoom: true,
-        doubleClickZoom: true,
-        dragging: true,
-        keyboard: true,
-        zoomAnimation: true,
-        fadeAnimation: true,
-        markerZoomAnimation: true
-      }
-    ).setView(
-      SITE_CONFIG.mapCenter,
-      SITE_CONFIG.mapZoom
-    );
+    state.map = L.map(mapElement, {
+      center: SITE_CONFIG.mapCenter,
+      zoom: SITE_CONFIG.mapZoom,
+      zoomControl: true,
+      scrollWheelZoom: false,
+      doubleClickZoom: true,
+      dragging: true,
+      keyboard: true,
+      zoomAnimation: true,
+      fadeAnimation: true,
+      markerZoomAnimation: true,
+      inertia: true
+    });
 
-    /*
-     * Peta dasar OpenStreetMap.
-     */
-    L.tileLayer(
-      "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-      {
-        minZoom: 3,
-        maxZoom: 19,
-        tileSize: 256,
-        detectRetina: false,
-        keepBuffer: 3,
-        updateWhenIdle: false,
-        attribution:
-          SITE_CONFIG.tileAttribution ||
-          "© OpenStreetMap"
-      }
-    ).addTo(appState.map);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      minZoom: 3,
+      maxZoom: 19,
+      keepBuffer: 3,
+      detectRetina: false,
+      attribution: SITE_CONFIG.tileAttribution
+    }).addTo(state.map);
 
-    /*
-     * Semua marker dimasukkan ke satu layer.
-     */
-    appState.markerLayer =
-      L.featureGroup().addTo(
-        appState.map
-      );
+    state.markerGroup = L.featureGroup().addTo(state.map);
 
     DESTINATIONS.forEach((item) => {
-      /*
-       * Menggunakan marker standar Leaflet.
-       * Tidak memakai marker HTML khusus agar lebih ringan.
-       */
-      const marker = L.marker(
-        [item.lat, item.lng],
-        {
-          title: item.title,
-          riseOnHover: true
-        }
-      );
-
-      marker.bindPopup(
-        popupHtml(item),
-        {
-          maxWidth: 300,
-          autoPan: true,
-          autoPanPadding: [20, 20]
-        }
-      );
-
-      marker.addTo(
-        appState.markerLayer
-      );
-
-      appState.markers.set(
-        item.id,
-        marker
-      );
+      const marker = L.marker([item.lat, item.lng], { title: item.title, riseOnHover: true })
+        .bindPopup(popupHtml(item), { maxWidth: 300, autoPan: true, autoPanPadding: [24, 24] })
+        .addTo(state.markerGroup);
+      state.markers.set(item.id, marker);
     });
 
-    /*
-     * Menampilkan semua lokasi saat pertama dibuka.
-     */
-    const bounds =
-      appState.markerLayer.getBounds();
-
+    const bounds = state.markerGroup.getBounds();
     if (bounds.isValid()) {
-      appState.map.fitBounds(
-        bounds,
-        {
-          padding: [35, 35],
-          maxZoom: 14,
-          animate: false
-        }
-      );
+      state.map.fitBounds(bounds, { padding: [36, 36], maxZoom: 14, animate: false });
     }
 
-    /*
-     * Tunggu layout selesai sebelum menghitung ukuran.
-     */
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        refreshMap(0);
-      });
-    });
-
-    window.setTimeout(
-      () => refreshMap(0),
-      250
-    );
+    state.map.whenReady(() => refreshMap(50));
+    requestAnimationFrame(() => requestAnimationFrame(() => refreshMap(0)));
+    window.setTimeout(() => refreshMap(0), 300);
   } catch (error) {
-    console.error(
-      "Peta gagal dibuat:",
-      error
-    );
-
-    showMapError(
-      "Peta gagal dibuat. Periksa Console browser untuk melihat kesalahan."
-    );
+    console.error("Peta gagal dibuat:", error);
+    showMapError("Peta gagal dibuat. Muat ulang halaman atau periksa Console browser.");
   }
 }
 
-
-/* =========================================================
-   FOKUS KE SATU DESTINASI
-========================================================= */
-
-function focusDestination(
-  destinationId,
-  scrollToMap = true
-) {
-  const destination =
-    DESTINATIONS.find(
-      (item) =>
-        item.id === destinationId
-    );
-
-  const marker =
-    appState.markers.get(
-      destinationId
-    );
-
-  if (
-    !destination ||
-    !marker ||
-    !appState.map
-  ) {
-    return;
-  }
+function focusDestination(id, scrollToMap = true) {
+  const item = DESTINATIONS.find((destination) => destination.id === id);
+  const marker = state.markers.get(id);
+  if (!item || !marker || !state.map) return;
 
   if (scrollToMap) {
-    document
-      .getElementById("peta")
-      ?.scrollIntoView({
-        behavior: "smooth",
-        block: "start"
-      });
+    document.getElementById("peta")?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
-
-  const delay =
-    scrollToMap ? 500 : 0;
 
   window.setTimeout(() => {
     refreshMap(0);
-
-    appState.map.flyTo(
-      [
-        destination.lat,
-        destination.lng
-      ],
-      16,
-      {
-        animate: true,
-        duration: 0.7
-      }
-    );
-
-    window.setTimeout(() => {
-      marker.openPopup();
-    }, 720);
-  }, delay);
+    state.map.flyTo([item.lat, item.lng], 16, { animate: true, duration: 0.7 });
+    window.setTimeout(() => marker.openPopup(), 720);
+  }, scrollToMap ? 450 : 0);
 }
-
-
-/* =========================================================
-   PENANGANAN PERUBAHAN UKURAN
-========================================================= */
 
 function setupMapRefresh() {
-  let resizeTimer;
+  let timer;
+  window.addEventListener("resize", () => {
+    window.clearTimeout(timer);
+    timer = window.setTimeout(() => refreshMap(0), 180);
+  }, { passive: true });
 
-  window.addEventListener(
-    "load",
-    () => refreshMap(150),
-    {
-      once: true
-    }
-  );
-
-  window.addEventListener(
-    "resize",
-    () => {
-      window.clearTimeout(
-        resizeTimer
-      );
-
-      resizeTimer =
-        window.setTimeout(() => {
-          refreshMap(0);
-        }, 200);
-    },
-    {
-      passive: true
-    }
-  );
-
-  window.addEventListener(
-    "orientationchange",
-    () => refreshMap(300),
-    {
-      passive: true
-    }
-  );
-
-  $$('a[href="#peta"]').forEach(
-    (link) => {
-      link.addEventListener(
-        "click",
-        () => refreshMap(500)
-      );
-    }
-  );
-
-  window.addEventListener(
-    "hashchange",
-    () => {
-      if (
-        window.location.hash ===
-        "#peta"
-      ) {
-        refreshMap(250);
-      }
-    }
-  );
-
-  if (
-    window.location.hash === "#peta"
-  ) {
-    refreshMap(300);
-  }
+  window.addEventListener("orientationchange", () => refreshMap(280), { passive: true });
+  $$('a[href="#peta"]').forEach((link) => link.addEventListener("click", () => refreshMap(450)));
+  if (document.fonts?.ready) document.fonts.ready.then(() => refreshMap(60));
+  if (window.location.hash === "#peta") refreshMap(300);
 }
-
-
-/* =========================================================
-   KONTAK WHATSAPP
-========================================================= */
 
 function setupContactLinks() {
   const url = whatsappUrl();
-
-  [
-    "waUpdate",
-    "waFooter",
-    "waMobile"
-  ].forEach((id) => {
-    const element =
-      document.getElementById(id);
-
-    if (element) {
-      element.href = url;
-    }
+  ["waUpdate", "waFooter", "waMobile"].forEach((id) => {
+    const element = document.getElementById(id);
+    if (element) element.href = url;
   });
 }
-
-
-/* =========================================================
-   MENJALANKAN WEBSITE
-========================================================= */
 
 function boot() {
   setupImageFallbacks();
   setupNavigation();
   setupSlider();
-
   renderDestinationCards();
   renderImportantLinks();
   renderMapPlaceList();
-
   setupContactLinks();
-
   initMap();
   setupMapRefresh();
 }
 
-
-document.addEventListener(
-  "DOMContentLoaded",
-  boot,
-  {
-    once: true
-  }
-);
+document.addEventListener("DOMContentLoaded", boot, { once: true });

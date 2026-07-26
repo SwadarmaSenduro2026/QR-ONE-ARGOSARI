@@ -1,19 +1,8 @@
-# QR-ONE ARGOSARI - Layout Mirip WebGIS UMKM Lemahputih
+# QR-ONE ARGOSARI — Versi Revisi
 
-Versi ini dibuat dengan susunan yang lebih mirip contoh `umkm-lemahputih`:
+Website ini memakai HTML, CSS, JavaScript, Leaflet 1.9.4, dan OpenStreetMap.
 
-1. Navbar: Home, Peta Wisata, Daftar Wisata, Tentang, Jelajahi
-2. Hero utama
-3. Tentang desa + slider/galeri
-4. Peta interaktif berbasis Leaflet
-5. Daftar wisata dengan tombol **Informasi lebih lanjut**
-6. Halaman detail terpisah `detail.html?id=...`
-7. Tautan penting pengganti Linktree
-8. Footer dan navigasi mobile
-
-## File yang perlu di-upload ke GitHub repository
-
-Upload semua file/folder ini ke root repository GitHub Pages:
+## Struktur yang harus berada di root repository
 
 ```text
 index.html
@@ -27,37 +16,35 @@ README.md
 assets/
 ```
 
-## Mengganti data wisata
+## File yang paling sering diedit
 
-Buka `data.js`, lalu edit bagian `DESTINATIONS`.
+- `data.js`: destinasi, foto, koordinat, nomor WhatsApp, dan tautan.
+- `index.html`: judul dan susunan bagian halaman utama.
+- `style.css`: warna, ukuran, dan tata letak.
 
-Contoh bagian yang paling sering diganti:
+## Mengganti foto
 
-```js
-{
-  id: "b29",
-  title: "Puncak B29 / Negeri di Atas Awan",
-  lat: -7.9592318,
-  lng: 112.9948334,
-  summary: "Ikon wisata Argosari...",
-  description: "Narasi lengkap..."
-}
-```
-
-## Membuat halaman detail baru
-
-Tidak perlu membuat file HTML baru. Cukup tambahkan data baru di `DESTINATIONS`, misalnya:
-
-```js
-id: "nama-wisata-baru"
-```
-
-Nanti tombol detail otomatis mengarah ke:
+Ganti file di `assets/photos/` menggunakan nama yang sama:
 
 ```text
-detail.html?id=nama-wisata-baru
+hero-argosari.webp
+b29.webp
+gardu-pandang.webp
+kampung-tengger.webp
+homestay-ojek.webp
+umkm-kuliner.webp
+rest-area-b29.webp
+og-argosari.jpg
 ```
 
-## Catatan peta
+Karena nama file tetap sama, `data.js` tidak perlu diubah.
 
-Peta memakai Leaflet dan OpenStreetMap dari CDN. Peta akan tampil saat website memiliki koneksi internet.
+## Ukuran foto
+
+- Hero: 1600 × 1000 px, WebP, ideal di bawah 450 KB.
+- Destinasi: 1200 × 750 px, WebP, ideal 150–300 KB.
+- OG image: 1200 × 630 px, JPG.
+
+## Peta
+
+Peta membutuhkan internet karena mengambil Leaflet dan tile OpenStreetMap dari CDN.

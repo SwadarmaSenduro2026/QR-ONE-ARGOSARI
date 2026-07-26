@@ -1,23 +1,8 @@
 /* =========================================================
-   SCRIPT HALAMAN DETAIL QR-ONE ARGOSARI
+   QR-ONE ARGOSARI — SCRIPT HALAMAN DETAIL
 ========================================================= */
 
-const qs = (
-  selector,
-  parent = document
-) => parent.querySelector(selector);
-
-function getDestinationId() {
-  const params =
-    new URLSearchParams(
-      window.location.search
-    );
-
-  return (
-    params.get("id") ||
-    "b29"
-  );
-}
+const $detail = (selector) => document.querySelector(selector);
 
 function escapeHtml(value) {
   return String(value ?? "")
@@ -28,345 +13,104 @@ function escapeHtml(value) {
     .replaceAll("'", "&#039;");
 }
 
-function getCategoryLabel(categoryId) {
-  const category =
-    CATEGORIES.find(
-      (item) =>
-        item.id === categoryId
-    );
-
-  return category
-    ? `${category.icon} ${category.label}`
-    : categoryId;
+function getDestination() {
+  const id = new URLSearchParams(window.location.search).get("id") || "b29";
+  return DESTINATIONS.find((item) => item.id === id);
 }
 
-function makeRouteUrl(item) {
-  return (
-    "https://www.google.com/maps/dir/?api=1" +
-    `&destination=${item.lat},${item.lng}`
-  );
+function routeUrl(item) {
+  return `https://www.google.com/maps/dir/?api=1&destination=${item.lat},${item.lng}`;
 }
 
-function makeWhatsappUrl(item) {
-  const message =
-    `Halo Admin QR-ONE Argosari, ` +
-    `saya ingin bertanya tentang ${item.title}.`;
-
-  return (
-    `https://wa.me/${SITE_CONFIG.whatsappNumber}` +
-    `?text=${encodeURIComponent(message)}`
-  );
+function whatsappUrl(item) {
+  const message = `Halo Admin QR-ONE Argosari, saya ingin bertanya tentang ${item.title}.`;
+  return `https://wa.me/${SITE_CONFIG.whatsappNumber}?text=${encodeURIComponent(message)}`;
 }
 
-function renderList(
-  targetId,
-  items
-) {
-  const target =
-    qs(`#${targetId}`);
-
-  if (!target) {
-    return;
-  }
-
-  target.innerHTML =
-    (items || [])
-      .map(
-        (item) =>
-          `<li>${escapeHtml(item)}</li>`
-      )
-      .join("");
+function renderList(selector, items) {
+  const target = $detail(selector);
+  if (!target) return;
+  target.innerHTML = (items || []).map((item) => `<li>${escapeHtml(item)}</li>`).join("");
 }
 
 function renderNotFound() {
-  const root =
-    qs("#detailRoot");
-
-  if (!root) {
-    return;
-  }
-
-  document.title =
-    "Data Tidak Ditemukan | QR-ONE ARGOSARI";
-
+  const root = $detail("#detailRoot");
+  if (!root) return;
+  document.title = "Data Tidak Ditemukan | QR-ONE ARGOSARI";
   root.innerHTML = `
     <section class="detail-hero not-found">
       <div class="container">
-        <p class="kicker">
-          Data tidak ditemukan
-        </p>
-
-        <h1>
-          Halaman destinasi belum tersedia.
-        </h1>
-
-        <p class="hero-text">
-          Tautan yang dibuka mungkin tidak sesuai.
-          Silakan kembali dan pilih destinasi lain.
-        </p>
-
-        <a
-          class="btn btn-primary"
-          href="index.html#daftar"
-        >
-          Kembali ke Daftar Destinasi
-        </a>
+        <p class="kicker">Data tidak ditemukan</p>
+        <h1>Halaman destinasi belum tersedia.</h1>
+        <p class="hero-text">Tautan yang dibuka mungkin tidak sesuai.</p>
+        <a class="btn btn-primary" href="index.html#daftar">Kembali ke Daftar Destinasi</a>
       </div>
-    </section>
-  `;
-}
-
-function setupImageFallback() {
-  const image =
-    qs("#detailImage");
-
-  if (!image) {
-    return;
-  }
-
-  image.addEventListener(
-    "error",
-    () => {
-      if (
-        image.dataset
-          .fallbackApplied === "true"
-      ) {
-        return;
-      }
-
-      image.dataset
-        .fallbackApplied = "true";
-
-      image.src =
-        SITE_CONFIG.fallbackImage;
-    }
-  );
-}
-
-function showDetailMapFallback() {
-  const mapElement =
-    qs("#detailMap");
-
-  const fallback =
-    qs("#detailMapFallback");
-
-  if (mapElement) {
-    mapElement.hidden = true;
-  }
-
-  if (fallback) {
-    fallback.hidden = false;
-  }
+    </section>`;
 }
 
 function initDetailMap(item) {
-  const mapElement =
-    qs("#detailMap");
-
-  if (
-    !mapElement ||
-    typeof window.L === "undefined"
-  ) {
-    showDetailMapFallback();
+  const element = $detail("#detailMap");
+  const fallback = $detail("#detailMapFallback");
+  if (!element || typeof window.L === "undefined") {
+    if (element) element.hidden = true;
+    if (fallback) fallback.hidden = false;
     return;
   }
 
   try {
-    const map = L.map(
-      mapElement,
-      {
-        scrollWheelZoom: false,
-        zoomControl: true,
-        preferCanvas: true
-      }
-    ).setView(
-      [item.lat, item.lng],
-      15
-    );
+    const map = L.map(element, { scrollWheelZoom: false, zoomControl: true }).setView([item.lat, item.lng], 15);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      minZoom: 3,
+      maxZoom: 19,
+      keepBuffer: 3,
+      detectRetina: false,
+      attribution: SITE_CONFIG.tileAttribution
+    }).addTo(map);
+    L.marker([item.lat, item.lng]).addTo(map).bindPopup(`<strong>${escapeHtml(item.title)}</strong>`).openPopup();
 
-    L.tileLayer(
-      "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-      {
-        maxZoom: 19,
-
-        attribution:
-          SITE_CONFIG.tileAttribution
-      }
-    ).addTo(map);
-
-    L.marker(
-      [item.lat, item.lng]
-    )
-      .addTo(map)
-      .bindPopup(
-        `
-          <strong>
-            ${escapeHtml(item.title)}
-          </strong>
-          <br>
-          ${escapeHtml(item.summary)}
-        `
-      )
-      .openPopup();
-
-    const refresh = () => {
-      map.invalidateSize({
-        pan: false,
-        animate: false
-      });
-    };
-
-    map.whenReady(() => {
-      window.setTimeout(
-        refresh,
-        100
-      );
-    });
-
-    window.addEventListener(
-      "load",
-      () => {
-        window.setTimeout(
-          refresh,
-          160
-        );
-      }
-    );
-
-    window.addEventListener(
-      "resize",
-      () => {
-        window.setTimeout(
-          refresh,
-          100
-        );
-      }
-    );
-
-    window.addEventListener(
-      "orientationchange",
-      () => {
-        window.setTimeout(
-          refresh,
-          220
-        );
-      }
-    );
-
-    if (
-      "ResizeObserver" in window
-    ) {
-      const observer =
-        new ResizeObserver(() => {
-          window.setTimeout(
-            refresh,
-            60
-          );
-        });
-
-      observer.observe(
-        mapElement
-      );
-    }
+    const refresh = () => map.invalidateSize({ pan: false, animate: false });
+    map.whenReady(() => window.setTimeout(refresh, 80));
+    window.addEventListener("resize", () => window.setTimeout(refresh, 120), { passive: true });
   } catch (error) {
-    console.error(
-      "Peta detail gagal dimuat:",
-      error
-    );
-
-    showDetailMapFallback();
+    console.error("Peta detail gagal dimuat:", error);
+    element.hidden = true;
+    if (fallback) fallback.hidden = false;
   }
 }
 
 function bootDetail() {
-  setupImageFallback();
-
-  const id =
-    getDestinationId();
-
-  const item =
-    DESTINATIONS.find(
-      (destination) =>
-        destination.id === id
-    );
-
+  const item = getDestination();
   if (!item) {
     renderNotFound();
     return;
   }
 
-  document.title =
-    `${item.title} | QR-ONE ARGOSARI`;
+  document.title = `${item.title} | QR-ONE ARGOSARI`;
+  const meta = $detail("#detailMetaDescription");
+  if (meta) meta.content = item.summary;
 
-  const metaDescription =
-    qs("#detailMetaDescription");
+  $detail("#detailCategory").textContent = `${item.icon} ${CATEGORIES[item.category] || item.category}`;
+  $detail("#detailTitle").textContent = item.title;
+  $detail("#detailSummary").textContent = item.summary;
+  $detail("#detailStatus").textContent = item.status;
+  $detail("#detailDescription").textContent = item.description;
+  $detail("#detailBestTime").textContent = item.bestTime;
+  $detail("#detailAddress").textContent = item.address;
+  $detail("#routeButton").href = routeUrl(item);
+  $detail("#waAsk").href = whatsappUrl(item);
 
-  if (metaDescription) {
-    metaDescription.content =
-      item.summary;
-  }
+  const image = $detail("#detailImage");
+  image.src = item.image;
+  image.alt = `Foto ${item.title}`;
+  image.addEventListener("error", () => {
+    if (image.dataset.fallbackApplied === "true") return;
+    image.dataset.fallbackApplied = "true";
+    image.src = SITE_CONFIG.fallbackImage;
+  });
 
-  qs("#detailCategory")
-    .textContent =
-      getCategoryLabel(
-        item.category
-      );
-
-  qs("#detailTitle")
-    .textContent =
-      item.title;
-
-  qs("#detailSummary")
-    .textContent =
-      item.summary;
-
-  qs("#detailImage")
-    .src =
-      item.image ||
-      SITE_CONFIG.fallbackImage;
-
-  qs("#detailImage")
-    .alt =
-      `Gambar ${item.title}`;
-
-  qs("#detailStatus")
-    .textContent =
-      item.status;
-
-  qs("#detailDescription")
-    .textContent =
-      item.description;
-
-  qs("#detailBestTime")
-    .textContent =
-      item.bestTime;
-
-  qs("#detailAddress")
-    .textContent =
-      item.address;
-
-  qs("#routeButton")
-    .href =
-      makeRouteUrl(item);
-
-  qs("#waAsk")
-    .href =
-      makeWhatsappUrl(item);
-
-  renderList(
-    "facilityList",
-    item.facilities
-  );
-
-  renderList(
-    "tipsList",
-    item.tips
-  );
-
+  renderList("#facilityList", item.facilities);
+  renderList("#tipsList", item.tips);
   initDetailMap(item);
 }
 
-document.addEventListener(
-  "DOMContentLoaded",
-  bootDetail
-);
+document.addEventListener("DOMContentLoaded", bootDetail, { once: true });
