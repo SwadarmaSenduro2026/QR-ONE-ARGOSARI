@@ -124,26 +124,65 @@ const DESTINATIONS = [
 const IMPORTANT_LINKS = [
   {
     title: "Informasi Ojek dan Homestay",
-    icon: "🏍️",
-    description: "Akses informasi penginapan dan transportasi lokal.",
-    url: "https://drive.google.com/file/d/1sqlLbXMqJCVpAdCNrxgeVhsjM_SyfOe4/view?usp=sharing"
+
+    image:
+      "assets/ojek.png",
+
+    imageAlt:
+      "Ilustrasi layanan ojek dan homestay Desa Argosari",
+
+    description:
+      "Akses informasi penginapan dan transportasi lokal untuk mendukung perjalanan Anda di Argosari.",
+
+    url:
+      "https://drive.google.com/file/d/1sqlLbXMqJCVpAdCNrxgeVhsjM_SyfOe4/view?usp=sharing"
   },
+
   {
     title: "Booklet Desa Argosari",
-    icon: "📘",
-    description: "Pelajari daya tarik dan informasi umum sebelum berkunjung.",
-    url: "https://drive.google.com/file/d/1lynH9S6S6cacOb6_g4D3ML0p147BaRYo/view?usp=sharing"
+
+    image:
+      "assets/booklet.png",
+
+    imageAlt:
+      "Ilustrasi booklet panduan wisata Desa Argosari",
+
+    description:
+      "Pelajari daya tarik, fasilitas, layanan, dan informasi umum Desa Argosari sebelum berkunjung.",
+
+    url:
+      "https://drive.google.com/file/d/1lynH9S6S6cacOb6_g4D3ML0p147BaRYo/view?usp=sharing"
   },
+
   {
     title: "Instagram Desa Wisata",
-    icon: "📷",
-    description: "Lihat dokumentasi dan informasi terbaru wisata Argosari.",
-    url: "https://www.instagram.com/desawisataargosari/"
+
+    image:
+      "assets/instagram.png",
+
+    imageAlt:
+      "Ilustrasi kamera untuk Instagram Desa Wisata Argosari",
+
+    description:
+      "Lihat dokumentasi, inspirasi perjalanan, dan informasi terbaru mengenai wisata Desa Argosari.",
+
+    url:
+      "https://www.instagram.com/desawisataargosari/"
   },
+
   {
     title: "Rute Menuju Desa Argosari",
-    icon: "📍",
-    description: "Buka petunjuk perjalanan menuju Argosari melalui Google Maps.",
-    url: "https://www.google.com/maps/search/?api=1&query=Argosari,+Senduro,+Lumajang"
+
+    image:
+      "assets/rute.png",
+
+    imageAlt:
+      "Ilustrasi peta dan rute perjalanan menuju Desa Argosari",
+
+    description:
+      "Buka petunjuk perjalanan menuju Desa Argosari melalui Google Maps.",
+
+    url:
+      "https://www.google.com/maps/search/?api=1&query=Argosari,+Senduro,+Lumajang"
   }
 ];
