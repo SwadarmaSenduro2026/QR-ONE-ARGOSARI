@@ -2765,3 +2765,153 @@ input:focus-visible {
       1 !important;
   }
 }
+
+/* =========================================================
+   PERBAIKAN FINAL POSISI HERO
+   Letakkan paling bawah style.css
+========================================================= */
+
+/* Desktop dan tablet landscape */
+@media (min-width: 761px) {
+  .hero-grid {
+    display: grid !important;
+
+    grid-template-columns:
+      minmax(0, 1fr)
+      minmax(340px, 460px) !important;
+
+    grid-template-rows: auto !important;
+
+    align-items: center !important;
+    justify-content: space-between !important;
+
+    gap: 48px !important;
+
+    max-width: none !important;
+
+    padding:
+      72px 0 90px !important;
+  }
+
+  .hero-content {
+    grid-column: 1 !important;
+    grid-row: 1 !important;
+
+    width: 100% !important;
+
+    align-self: center !important;
+
+    text-align: center !important;
+  }
+
+  .hero-content .kicker {
+    text-align: center !important;
+  }
+
+  .hero-content h1 {
+    max-width: 760px !important;
+
+    margin-right: auto !important;
+    margin-left: auto !important;
+
+    text-align: center !important;
+  }
+
+  .hero-text {
+    max-width: 680px !important;
+
+    margin:
+      27px auto 0 !important;
+
+    text-align: center !important;
+  }
+
+  .hero-actions {
+    display: flex !important;
+
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+
+    gap: 14px !important;
+
+    margin-top: 31px !important;
+  }
+
+  .hero-card {
+    grid-column: 2 !important;
+    grid-row: 1 !important;
+
+    width: 100% !important;
+    max-width: 460px !important;
+
+    justify-self: end !important;
+    align-self: center !important;
+
+    margin: 0 !important;
+  }
+
+  .hero-card-body {
+    text-align: center !important;
+  }
+
+  .hero-card-body .chip {
+    margin-right: auto !important;
+    margin-left: auto !important;
+  }
+
+  .hero-card h2,
+  .hero-card p {
+    text-align: center !important;
+  }
+
+  .hero-card p {
+    max-width: 390px !important;
+
+    margin-right: auto !important;
+    margin-left: auto !important;
+  }
+}
+
+
+/* HP */
+@media (max-width: 760px) {
+  .hero-grid {
+    display: grid !important;
+
+    grid-template-columns: 1fr !important;
+    grid-template-rows: auto auto !important;
+
+    gap: 36px !important;
+
+    max-width: 680px !important;
+
+    padding:
+      54px 0 82px !important;
+  }
+
+  .hero-content {
+    grid-column: 1 !important;
+    grid-row: 1 !important;
+
+    text-align: center !important;
+  }
+
+  .hero-card {
+    grid-column: 1 !important;
+    grid-row: 2 !important;
+
+    width: 100% !important;
+    max-width: 520px !important;
+
+    justify-self: center !important;
+
+    margin:
+      0 auto !important;
+  }
+}
+
+
+/* Hilangkan fitur lama di bawah tombol */
+.hero-highlights {
+  display: none !important;
+}
