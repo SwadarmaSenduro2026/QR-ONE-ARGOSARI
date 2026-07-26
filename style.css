@@ -577,23 +577,6 @@ input:focus-visible {
   margin-top: 31px;
 }
 
-.hero-highlights {
-  display: flex;
-
-  flex-wrap: wrap;
-
-  gap:
-    10px 21px;
-
-  margin-top: 25px;
-
-  color:
-    rgba(255, 255, 255, 0.78);
-
-  font-size: 0.82rem;
-  font-weight: 650;
-}
-
 
 /* =========================================================
    5. TOMBOL
