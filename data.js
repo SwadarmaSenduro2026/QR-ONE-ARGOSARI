@@ -1,15 +1,15 @@
 /* =========================================================
    QR-ONE ARGOSARI — DATA WEBSITE
 
-   FILE YANG PALING SERING DIEDIT.
-   Ubah teks, koordinat, foto, nomor WhatsApp, dan tautan di sini.
+   Edit teks, foto, koordinat, nomor WhatsApp, dan daftar tempat
+   pada file ini. Struktur HTML dan JavaScript tidak perlu diubah.
 ========================================================= */
 
 const SITE_CONFIG = {
   village: "Desa Argosari, Kecamatan Senduro, Kabupaten Lumajang",
   mapCenter: [-7.9825, 113.0095],
   mapZoom: 13,
-  fallbackImage: "assets/photos/hero-argosari.webp",
+  fallbackImage: "assets/panorama_argosari.webp",
   whatsappNumber: "6282139497797",
   whatsappMessage: "Halo Admin QR-ONE Argosari, saya ingin memperoleh informasi wisata Desa Argosari.",
   tileAttribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -18,16 +18,19 @@ const SITE_CONFIG = {
 const CATEGORIES = {
   wisata: "Wisata Alam",
   budaya: "Budaya & Desa",
-  layanan: "Layanan Wisata",
-  fasilitas: "Fasilitas"
+  fasilitas: "Fasilitas Pendukung",
+  homestay: "Homestay & Penginapan",
+  umkm: "Kuliner & UMKM"
 };
 
+/* Lokasi yang memiliki satu titik peta dan halaman detail. */
 const DESTINATIONS = [
   {
     id: "b29",
+    kind: "destination",
     title: "Puncak B29 / Negeri di Atas Awan",
     category: "wisata",
-    icon: "⛰️",
+    icon: "▲",
     image: "assets/b29.webp",
     lat: -7.959141,
     lng: 112.994822,
@@ -41,10 +44,11 @@ const DESTINATIONS = [
   },
   {
     id: "gardu-pandang",
+    kind: "destination",
     title: "Gardu Pandang Argosari",
     category: "wisata",
-    icon: "🌄",
-    image: "assets/photos/gardu-pandang.webp",
+    icon: "◒",
+    image: "assets/Panorama_Argosari.png",
     lat: -7.967916,
     lng: 113.011641,
     status: "Destinasi Unggulan",
@@ -57,57 +61,27 @@ const DESTINATIONS = [
   },
   {
     id: "kampung-tengger",
+    kind: "destination",
     title: "Argosari Kampung Budaya Tengger",
     category: "budaya",
-    icon: "🏘️",
+    icon: "◆",
     image: "assets/wisata budaya.webp",
     lat: -7.9902666,
     lng: 113.013113,
     status: "Wisata Budaya",
     summary: "Kenali kehidupan masyarakat, pertanian dataran tinggi, dan budaya Tengger di Desa Argosari.",
-    description: "Kampung Wisata dan Budaya Tengger menghadirkan pengalaman untuk mengenal kehidupan masyarakat dataran tinggi Argosari, aktivitas pertanian, budaya lokal, dan keramahan warga.",
+    description: "Kampung Budaya Tengger menghadirkan pengalaman untuk mengenal kehidupan masyarakat dataran tinggi Argosari, aktivitas pertanian, budaya lokal, serta keramahan warga.",
     address: "Pusat Desa Argosari, Kecamatan Senduro, Kabupaten Lumajang, Jawa Timur.",
     bestTime: "Pagi hingga sore hari atau menyesuaikan jadwal kegiatan budaya.",
     facilities: ["Informasi desa", "Homestay warga", "Produk lokal", "Kontak pengelola"],
     tips: ["Hormati adat dan ruang pribadi warga.", "Minta izin sebelum mengambil foto warga.", "Gunakan bahasa yang sopan.", "Dukung produk lokal."]
   },
   {
-    id: "homestay-ojek",
-    title: "Homestay",
-    category: "layanan",
-    icon: "🏡",
-    image: "assets/photos/homestay-ojek.webp",
-    lat: -7.9914,
-    lng: 113.014,
-    status: "Layanan Wisata",
-    summary: "Informasi penginapan warga dan transportasi lokal untuk mendukung perjalanan di Argosari.",
-    description: "Layanan homestay dan ojek wisata membantu pengunjung merencanakan kunjungan dengan lebih praktis. Hubungi pengelola untuk menanyakan ketersediaan, titik penjemputan, harga, dan pemesanan.",
-    address: "Kawasan permukiman Desa Argosari, Kecamatan Senduro, Kabupaten Lumajang.",
-    bestTime: "Pesan sebelum kedatangan, terutama pada akhir pekan dan musim liburan.",
-    facilities: ["Homestay warga", "Ojek wisata", "Informasi pemesanan", "Kontak WhatsApp"],
-    tips: ["Konfirmasi harga dan fasilitas sebelum memesan.", "Simpan nomor kontak pengelola.", "Tanyakan titik penjemputan.", "Siapkan metode pembayaran yang disepakati."]
-  },
-  {
-    id: "umkm-kuliner",
-    title: "Warung, Kuliner, dan UMKM Argosari",
-    category: "layanan",
-    icon: "☕",
-    image: "assets/photos/umkm-kuliner.webp",
-    lat: -7.9921,
-    lng: 113.0124,
-    status: "Produk Lokal",
-    summary: "Nikmati kuliner dan temukan produk lokal yang melengkapi pengalaman berwisata di Argosari.",
-    description: "Warung dan UMKM lokal menyediakan makanan, minuman, oleh-oleh, dan produk warga. Berbelanja di usaha lokal membantu mendukung perekonomian masyarakat Desa Argosari.",
-    address: "Kawasan Desa Argosari, Kecamatan Senduro, Kabupaten Lumajang.",
-    bestTime: "Pagi hingga sore hari, menyesuaikan jam operasional masing-masing usaha.",
-    facilities: ["Makanan dan minuman", "Produk lokal", "Oleh-oleh", "Kontak penjual"],
-    tips: ["Tanyakan jam buka sebelum datang.", "Siapkan uang tunai.", "Pilih produk lokal.", "Jaga kebersihan area makan."]
-  },
-  {
     id: "rest-area-b29",
+    kind: "destination",
     title: "Rest Area 1 B29",
     category: "fasilitas",
-    icon: "🚻",
+    icon: "■",
     image: "assets/restarea1.webp",
     lat: -7.980441,
     lng: 113.022133,
@@ -121,68 +95,111 @@ const DESTINATIONS = [
   }
 ];
 
+/*
+  Direktori layanan. Klik kartu di halaman utama untuk membuka daftar.
+  Setiap item kemudian membuka Google Maps.
+
+  CATATAN:
+  Nama di bawah masih berupa kategori pencarian umum, bukan nama usaha
+  yang sudah diverifikasi. Ganti name, description, dan mapUrl dengan
+  data homestay/UMKM aktual setelah survei lapangan.
+*/
+const SERVICE_COLLECTIONS = [
+  {
+    id: "homestay",
+    kind: "collection",
+    title: "Homestay dan Penginapan",
+    category: "homestay",
+    icon: "⌂",
+    image: "assets/gallery-2.svg",
+    status: "Direktori Layanan",
+    summary: "Buka daftar pilihan area penginapan dan akses pencarian lokasinya melalui Google Maps.",
+    intro: "Pilih area penginapan yang sesuai. Tautan saat ini membuka hasil pencarian Google Maps dan dapat diganti dengan lokasi homestay aktual pada data.js.",
+    places: [
+      {
+        name: "Homestay di Pusat Desa Argosari",
+        description: "Pencarian penginapan di sekitar pusat Desa Argosari.",
+        mapUrl: "https://www.google.com/maps/search/?api=1&query=homestay+Desa+Argosari+Senduro+Lumajang"
+      },
+      {
+        name: "Homestay di Jalur Wisata B29",
+        description: "Pencarian penginapan yang berada di sekitar jalur menuju Puncak B29.",
+        mapUrl: "https://www.google.com/maps/search/?api=1&query=homestay+Puncak+B29+Argosari+Lumajang"
+      },
+      {
+        name: "Penginapan di Sekitar Senduro",
+        description: "Pilihan pencarian penginapan pendukung di wilayah Senduro.",
+        mapUrl: "https://www.google.com/maps/search/?api=1&query=penginapan+Senduro+Lumajang"
+      }
+    ]
+  },
+  {
+    id: "umkm-kuliner",
+    kind: "collection",
+    title: "Warung, Kuliner, dan UMKM",
+    category: "umkm",
+    icon: "◎",
+    image: "assets/gallery-3.svg",
+    status: "Direktori Usaha Lokal",
+    summary: "Temukan kategori warung, kuliner, dan produk lokal yang dapat dikunjungi di sekitar Argosari.",
+    intro: "Pilih kategori usaha lokal untuk membukanya di Google Maps. Ganti daftar ini dengan nama usaha aktual setelah data lapangan tersedia.",
+    places: [
+      {
+        name: "Warung di Desa Argosari",
+        description: "Pencarian warung makan dan minum di kawasan Desa Argosari.",
+        mapUrl: "https://www.google.com/maps/search/?api=1&query=warung+Desa+Argosari+Senduro+Lumajang"
+      },
+      {
+        name: "Kuliner di Jalur Wisata B29",
+        description: "Pencarian tempat makan di sekitar jalur perjalanan menuju B29.",
+        mapUrl: "https://www.google.com/maps/search/?api=1&query=kuliner+Puncak+B29+Argosari+Lumajang"
+      },
+      {
+        name: "UMKM dan Oleh-oleh Argosari",
+        description: "Pencarian produk lokal dan oleh-oleh di sekitar Argosari.",
+        mapUrl: "https://www.google.com/maps/search/?api=1&query=UMKM+oleh-oleh+Argosari+Senduro+Lumajang"
+      }
+    ]
+  }
+];
+
+/* Urutan kartu pada galeri “Pesona alam dan budaya”. */
+const EXPLORE_ITEMS = [
+  DESTINATIONS[0],
+  DESTINATIONS[1],
+  DESTINATIONS[2],
+  SERVICE_COLLECTIONS[0],
+  SERVICE_COLLECTIONS[1],
+  DESTINATIONS[3]
+];
+
 const IMPORTANT_LINKS = [
   {
     title: "Informasi Ojek dan Homestay",
-
-    image:
-      "assets/ojek.png",
-
-    imageAlt:
-      "Ilustrasi layanan ojek dan homestay Desa Argosari",
-
-    description:
-      "Akses informasi penginapan dan transportasi lokal untuk mendukung perjalanan Anda di Argosari.",
-
-    url:
-      "https://drive.google.com/file/d/1sqlLbXMqJCVpAdCNrxgeVhsjM_SyfOe4/view?usp=sharing"
+    image: "assets/ojek.png",
+    imageAlt: "Ilustrasi layanan ojek dan homestay Desa Argosari",
+    description: "Akses informasi penginapan dan transportasi lokal untuk mendukung perjalanan Anda.",
+    url: "https://drive.google.com/file/d/1sqlLbXMqJCVpAdCNrxgeVhsjM_SyfOe4/view?usp=sharing"
   },
-
   {
     title: "Booklet Desa Argosari",
-
-    image:
-      "assets/booklet.png",
-
-    imageAlt:
-      "Ilustrasi booklet panduan wisata Desa Argosari",
-
-    description:
-      "Pelajari daya tarik, fasilitas, layanan, dan informasi umum Desa Argosari sebelum berkunjung.",
-
-    url:
-      "https://drive.google.com/file/d/1lynH9S6S6cacOb6_g4D3ML0p147BaRYo/view?usp=sharing"
+    image: "assets/booklet.png",
+    imageAlt: "Ilustrasi booklet panduan wisata Desa Argosari",
+    description: "Pelajari daya tarik, fasilitas, layanan, dan informasi umum sebelum berkunjung.",
+    url: "https://drive.google.com/file/d/1lynH9S6S6cacOb6_g4D3ML0p147BaRYo/view?usp=sharing"
   },
-
   {
     title: "Instagram Desa Wisata",
-
-    image:
-      "assets/instagram.png",
-
-    imageAlt:
-      "Ilustrasi kamera untuk Instagram Desa Wisata Argosari",
-
-    description:
-      "Lihat dokumentasi, inspirasi perjalanan, dan informasi terbaru mengenai wisata Desa Argosari.",
-
-    url:
-      "https://www.instagram.com/desawisataargosari/"
+    image: "assets/instagram.png",
+    imageAlt: "Ilustrasi kamera untuk Instagram Desa Wisata Argosari",
+    description: "Lihat dokumentasi, inspirasi perjalanan, dan informasi terbaru mengenai wisata Argosari.",
+    url: "https://www.instagram.com/desawisataargosari/"
   },
-
   {
     title: "Rute Menuju Desa Argosari",
-
-    image:
-      "assets/rute.png",
-
-    imageAlt:
-      "Ilustrasi peta dan rute perjalanan menuju Desa Argosari",
-
-    description:
-      "Buka petunjuk perjalanan menuju Desa Argosari melalui Google Maps.",
-
-    url:
-      "https://www.google.com/maps/search/?api=1&query=Argosari,+Senduro,+Lumajang"
+    image: "assets/rute.png",
+    imageAlt: "Ilustrasi peta dan rute perjalanan menuju Desa Argosari",
+    description: "Buka petunjuk perjalanan menuju Desa Argosari melalui Google Maps.",
+    url: "https://www.google.com/maps/search/?api=1&query=Argosari,+Senduro,+Lumajang"
   }
 ];

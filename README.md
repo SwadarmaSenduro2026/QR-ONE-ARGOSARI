@@ -1,50 +1,33 @@
 # QR-ONE ARGOSARI — Versi Revisi
 
-Website ini memakai HTML, CSS, JavaScript, Leaflet 1.9.4, dan OpenStreetMap.
+Portal informasi dan peta wisata Desa Argosari.
 
-## Struktur yang harus berada di root repository
+## Perubahan utama
 
-```text
-index.html
-detail.html
-style.css
-data.js
-script.js
-detail.js
-README.md
-.nojekyll
-assets/
+- Bagian **Pilihan destinasi dan layanan wisata** dihapus.
+- Seluruh destinasi dan layanan dirangkum dalam galeri interaktif **Pesona alam dan budaya**.
+- Destinasi tunggal membuka `detail.html?id=...`.
+- Homestay dan UMKM membuka `detail.html?collection=...` yang menampilkan daftar tempat.
+- Setiap item pada daftar homestay/UMKM langsung membuka Google Maps.
+- Peta utama hanya menampilkan lokasi yang mempunyai satu titik koordinat.
+
+## File yang perlu diunggah untuk mengganti versi lama
+
+- `index.html`
+- `style.css`
+- `script.js`
+- `data.js`
+- `detail.html`
+- `detail.js`
+
+Folder `assets` tidak perlu diganti karena kode revisi menggunakan gambar yang sudah tersedia di repository.
+
+## Mengisi daftar homestay dan UMKM
+
+Buka `data.js`, lalu cari:
+
+```js
+const SERVICE_COLLECTIONS = [
 ```
 
-## File yang paling sering diedit
-
-- `data.js`: destinasi, foto, koordinat, nomor WhatsApp, dan tautan.
-- `index.html`: judul dan susunan bagian halaman utama.
-- `style.css`: warna, ukuran, dan tata letak.
-
-## Mengganti foto
-
-Ganti file di `assets/photos/` menggunakan nama yang sama:
-
-```text
-hero-argosari.webp
-b29.webp
-gardu-pandang.webp
-kampung-tengger.webp
-homestay-ojek.webp
-umkm-kuliner.webp
-rest-area-b29.webp
-og-argosari.jpg
-```
-
-Karena nama file tetap sama, `data.js` tidak perlu diubah.
-
-## Ukuran foto
-
-- Hero: 1600 × 1000 px, WebP, ideal di bawah 450 KB.
-- Destinasi: 1200 × 750 px, WebP, ideal 150–300 KB.
-- OG image: 1200 × 630 px, JPG.
-
-## Peta
-
-Peta membutuhkan internet karena mengambil Leaflet dan tile OpenStreetMap dari CDN.
+Ganti setiap `name`, `description`, dan `mapUrl` dengan data tempat aktual hasil survei. Daftar awal yang tersedia masih berupa kategori pencarian umum Google Maps, bukan daftar usaha terverifikasi.

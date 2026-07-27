@@ -2,666 +2,183 @@
 <html lang="id">
 <head>
   <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>QR-ONE ARGOSARI | Peta Wisata Desa Argosari</title>
+  <meta name="description" content="Jelajahi destinasi, budaya, homestay, kuliner, fasilitas, dan rute wisata Desa Argosari melalui QR-ONE ARGOSARI." />
+  <meta name="theme-color" content="#173d26" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://swadarmasenduro2026.github.io/QR-ONE-ARGOSARI/" />
 
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1"
-  />
+  <meta property="og:title" content="QR-ONE ARGOSARI | Peta Wisata Desa Argosari" />
+  <meta property="og:description" content="Jelajahi Desa Argosari melalui peta wisata dan informasi perjalanan dalam satu akses." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://swadarmasenduro2026.github.io/QR-ONE-ARGOSARI/" />
+  <meta property="og:image" content="https://swadarmasenduro2026.github.io/QR-ONE-ARGOSARI/assets/panorama_argosari.webp" />
+  <meta property="og:image:alt" content="Panorama Desa Argosari" />
+  <meta name="twitter:card" content="summary_large_image" />
 
-  <title>
-    QR-ONE ARGOSARI | Peta Wisata Desa Argosari
-  </title>
-
-  <meta
-    name="description"
-    content="Temukan destinasi wisata, rute perjalanan, homestay, fasilitas, dan layanan wisata Desa Argosari melalui peta interaktif QR-ONE ARGOSARI."
-  />
-
-  <meta
-    name="theme-color"
-    content="#173d26"
-  />
-
-  <meta
-    name="robots"
-    content="index, follow"
-  />
-
-  <link
-    rel="canonical"
-    href="https://swadarmasenduro2026.github.io/QR-ONE-ARGOSARI/"
-  />
-
-  <!-- Informasi ketika tautan dibagikan -->
-  <meta
-    property="og:title"
-    content="QR-ONE ARGOSARI | Peta Wisata Desa Argosari"
-  />
-
-  <meta
-    property="og:description"
-    content="Jelajahi destinasi, rute perjalanan, homestay, dan layanan wisata Desa Argosari melalui satu peta interaktif."
-  />
-
-  <meta
-    property="og:type"
-    content="website"
-  />
-
-  <meta
-    property="og:url"
-    content="https://swadarmasenduro2026.github.io/QR-ONE-ARGOSARI/"
-  />
-
-  <!-- Menggunakan gambar PNG yang tersedia -->
-  <meta
-    property="og:image"
-    content="https://swadarmasenduro2026.github.io/QR-ONE-ARGOSARI/assets/Logo-KKN%20SS.png"
-  />
-
-  <meta
-    property="og:image:alt"
-    content="Logo QR-ONE Argosari"
-  />
-
-  <meta
-    name="twitter:card"
-    content="summary"
-  />
-
-  <!-- Favicon -->
-  <link
-    rel="icon"
-    href="./assets/Logo-KKN%20SS.png"
-    type="image/png"
-  />
-
-  <!-- Font Montserrat -->
-  <link
-    rel="preconnect"
-    href="https://fonts.googleapis.com"
-  />
-
-  <link
-    rel="preconnect"
-    href="https://fonts.gstatic.com"
-    crossorigin
-  />
-
-  <link
-    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap"
-    rel="stylesheet"
-  />
-
-  <!-- Leaflet -->
-  <link
-    rel="preconnect"
-    href="https://unpkg.com"
-  />
-
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    integrity="sha256-p4NxAoJBhIINfQF7+zVvr/AhR1N1EZwA7m4r24f8+2c="
-    crossorigin=""
-  />
-
-  <!-- CSS website harus berada setelah CSS Leaflet -->
-  <link
-  rel="stylesheet"
-  href="./style.css?v=20260726-3"
-/>
+  <link rel="icon" href="./assets/Logo-KKN%20SS.png" type="image/png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://unpkg.com" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIINfQF7+zVvr/AhR1N1EZwA7m4r24f8+2c=" crossorigin="" />
+  <link rel="stylesheet" href="./style.css?v=20260727-1" />
 </head>
-
 <body>
-  <a
-    class="skip-link"
-    href="#main"
-  >
-    Lewati ke konten utama
-  </a>
+  <a class="skip-link" href="#main">Lewati ke konten utama</a>
 
-  <!-- =====================================================
-       HEADER
-  ====================================================== -->
-
-  <header
-    class="topbar"
-    id="home"
-  >
-    <nav
-      class="navbar"
-      aria-label="Navigasi utama"
-    >
-      <a
-        class="brand"
-        href="./index.html"
-        aria-label="Beranda QR-ONE Argosari"
-      >
-        <img
-          src="./assets/Logo-KKN%20SS.png"
-          alt=""
-          width="48"
-          height="48"
-        />
-
-        <span>
-          QR-ONE
-          <br />
-          <strong>ARGOSARI</strong>
-        </span>
+  <header class="topbar" id="home">
+    <nav class="navbar" aria-label="Navigasi utama">
+      <a class="brand" href="./index.html" aria-label="Beranda QR-ONE Argosari">
+        <img src="./assets/Logo-KKN%20SS.png" alt="" width="48" height="48" />
+        <span>QR-ONE<strong>ARGOSARI</strong></span>
       </a>
 
-      <button
-        class="menu-toggle"
-        type="button"
-        aria-label="Buka menu navigasi"
-        aria-expanded="false"
-        aria-controls="navLinks"
-      >
-        ☰
-      </button>
+      <button class="menu-toggle" type="button" aria-label="Buka menu navigasi" aria-expanded="false" aria-controls="navLinks">☰</button>
 
-      <div
-        class="nav-links"
-        id="navLinks"
-      >
-        <a href="#home">
-          Home
-        </a>
-
-        <a href="#peta">
-          Peta Wisata
-        </a>
-
-        <a href="#daftar">
-          Destinasi
-        </a>
-
-        <a href="#tentang">
-          Tentang
-        </a>
-
-        <a
-          class="nav-pill"
-          href="#peta"
-        >
-          Buka Peta
-        </a>
+      <div class="nav-links" id="navLinks">
+        <a href="#home">Home</a>
+        <a href="#jelajahi">Jelajahi</a>
+        <a href="#peta">Peta Wisata</a>
+        <a href="#informasi">Informasi</a>
+        <a class="nav-pill" href="#peta">Buka Peta</a>
       </div>
     </nav>
   </header>
 
-  <!-- =====================================================
-       KONTEN UTAMA
-  ====================================================== -->
-
   <main id="main">
-
-    <!-- ===================================================
-         HERO
-    ==================================================== -->
-
-    <section
-      class="hero-section"
-      aria-labelledby="heroTitle"
-    >
-      <div
-        class="hero-pattern"
-        aria-hidden="true"
-      ></div>
-
+    <section class="hero-section" aria-labelledby="heroTitle">
+      <div class="hero-pattern" aria-hidden="true"></div>
       <div class="container hero-grid">
         <div class="hero-content">
-          <p class="kicker">
-            Desa Argosari • Senduro • Lumajang
-          </p>
-
-          <h1 id="heroTitle">
-            <span>Jelajahi Argosari</span>
-            <br />
-            dari Satu Peta
-          </h1>
-
-          <p class="hero-text">
-            Temukan destinasi wisata, homestay, rute perjalanan,
-            fasilitas pendukung, layanan lokal, serta kontak
-            pengelola melalui satu peta interaktif.
-          </p>
-
+          <p class="kicker">Desa Argosari • Senduro • Lumajang</p>
+          <h1 id="heroTitle"><span>Jelajahi Argosari</span><br />dari Satu Peta</h1>
+          <p class="hero-text">Temukan destinasi wisata, budaya, homestay, kuliner, fasilitas pendukung, dan rute perjalanan melalui satu portal wisata berbasis peta.</p>
           <div class="hero-actions">
-            <a
-              class="btn btn-primary"
-              href="#peta"
-            >
-              Buka Peta Wisata
-            </a>
-
-            <a
-              class="btn btn-outline"
-              href="#daftar"
-            >
-              Temukan Destinasi
-            </a>
+            <a class="btn btn-primary" href="#jelajahi">Jelajahi Argosari</a>
+            <a class="btn btn-outline" href="#peta">Buka Peta Wisata</a>
           </div>
+        </div>
 
-        <article
-          class="hero-card"
-          aria-labelledby="heroCardTitle"
-        >
-<img
-  src="assets/panorama_argosari.webp"
-  alt="Panorama Desa Argosari"
->
-
+        <article class="hero-card" aria-labelledby="heroCardTitle">
+          <img src="./assets/panorama_argosari.webp" alt="Panorama Desa Argosari" width="1200" height="750" fetchpriority="high" />
           <div class="hero-card-body">
-            <span class="chip">
-              Informasi wisata dalam satu akses
-            </span>
-
-            <h2 id="heroCardTitle">
-              Rencanakan perjalanan dengan lebih mudah
-            </h2>
-
-            <p>
-              Lihat lokasi destinasi, pilih tempat menginap,
-              temukan layanan perjalanan, dan akses informasi
-              penting sebelum menjelajahi Argosari.
-            </p>
+            <span class="chip">Informasi wisata dalam satu akses</span>
+            <h2 id="heroCardTitle">Rencanakan perjalanan dengan lebih mudah</h2>
+            <p>Lihat lokasi destinasi, temukan layanan lokal, dan buka petunjuk perjalanan sebelum menjelajahi Argosari.</p>
           </div>
         </article>
       </div>
     </section>
 
-    <!-- ===================================================
-         TENTANG ARGOSARI
-    ==================================================== -->
-
-    <section
-      class="intro-section"
-      id="tentang"
-      aria-labelledby="aboutTitle"
-    >
-      <div class="container intro-grid">
+    <section class="explore-section" id="jelajahi" aria-labelledby="exploreTitle">
+      <div class="container explore-layout">
         <div class="section-copy">
-          <p class="section-label">
-            Tentang Argosari
-          </p>
-
-          <h2 id="aboutTitle">
-            Pesona alam dan budaya dari dataran tinggi Argosari.
-          </h2>
-
-          <p>
-            Argosari menghadirkan panorama pegunungan,
-            kehidupan masyarakat lokal, serta pengalaman
-            wisata desa. QR-ONE ARGOSARI membantu pengunjung
-            menemukan destinasi, rute perjalanan, homestay,
-            fasilitas, dan layanan wisata dalam satu akses.
-          </p>
-
-          <p class="hash">
-            #JelajahiArgosari
-            #WisataLumajang
-            #NegeriDiAtasAwan
-          </p>
+          <p class="section-label">Tentang Argosari</p>
+          <h2 id="exploreTitle">Pesona alam dan budaya dari dataran tinggi Argosari.</h2>
+          <p>Temukan daya tarik utama Argosari dalam satu galeri interaktif. Pilih kartu di samping untuk membaca detail destinasi atau membuka daftar homestay dan usaha lokal.</p>
+          <p class="hash">#JelajahiArgosari #WisataLumajang #NegeriDiAtasAwan</p>
         </div>
 
-        <div
-          class="slider"
-          aria-label="Galeri destinasi Argosari"
-        >
-          <button
-            class="slider-btn prev"
-            type="button"
-            aria-label="Tampilkan destinasi sebelumnya"
-          >
-            ‹
-          </button>
-
-          <div
-            class="slider-track"
-            id="sliderTrack"
-            aria-live="polite"
-          ></div>
-
-          <button
-            class="slider-btn next"
-            type="button"
-            aria-label="Tampilkan destinasi berikutnya"
-          >
-            ›
-          </button>
+        <div class="explore-slider" aria-label="Pilihan destinasi dan layanan Argosari">
+          <button class="slider-btn prev" type="button" aria-label="Tampilkan pilihan sebelumnya">‹</button>
+          <div class="slider-track" id="sliderTrack" aria-live="polite"></div>
+          <button class="slider-btn next" type="button" aria-label="Tampilkan pilihan berikutnya">›</button>
+          <div class="slider-dots" id="sliderDots" aria-label="Navigasi galeri"></div>
         </div>
       </div>
     </section>
 
-    <!-- ===================================================
-         PETA INTERAKTIF
-    ==================================================== -->
-
-    <section
-      class="map-section"
-      id="peta"
-      aria-labelledby="mapTitle"
-    >
+    <section class="map-section" id="peta" aria-labelledby="mapTitle">
       <div class="container">
         <div class="section-head center">
-          <p class="section-label">
-            Peta Interaktif
-          </p>
-
-          <h2 id="mapTitle">
-            Temukan lokasi wisata dan layanan di Argosari
-          </h2>
-
-          <p>
-            Klik marker pada peta atau pilih lokasi dari
-            legenda untuk melihat informasi singkat dan
-            membuka rute perjalanan.
-          </p>
+          <p class="section-label">Peta Interaktif</p>
+          <h2 id="mapTitle">Temukan lokasi wisata di Argosari</h2>
+          <p>Klik marker pada peta atau pilih lokasi dari legenda untuk melihat ringkasan, detail, dan rute perjalanan.</p>
         </div>
 
         <div class="map-layout">
-
-          <!-- Peta Leaflet -->
           <div class="map-box">
-            <div
-              id="argosariMap"
-              role="region"
-              tabindex="0"
-              aria-label="Peta wisata interaktif Desa Argosari"
-            ></div>
-
-            <div
-              id="mapError"
-              class="map-error"
-              role="alert"
-              hidden
-            >
-              Peta tidak dapat dimuat. Periksa koneksi internet,
-              kemudian muat ulang halaman.
-            </div>
+            <div id="argosariMap" role="region" tabindex="0" aria-label="Peta wisata interaktif Desa Argosari"></div>
+            <div id="mapError" class="map-error" role="alert" hidden>Peta tidak dapat dimuat. Periksa koneksi internet, lalu muat ulang halaman.</div>
           </div>
 
-          <!-- Legenda dan daftar tempat -->
-          <aside
-            class="map-legend"
-            aria-labelledby="legendTitle"
-          >
+          <aside class="map-legend" aria-labelledby="legendTitle">
             <div class="legend-head">
-              <h3 id="legendTitle">
-                Legenda
-              </h3>
-
-              <p>
-                Pilih tempat untuk mengarahkan peta ke lokasi.
-              </p>
+              <h3 id="legendTitle">Daftar lokasi</h3>
+              <p>Pilih tempat untuk mengarahkan peta ke lokasi.</p>
             </div>
-
-            <div
-              id="mapPlaceList"
-              class="map-place-list"
-            ></div>
+            <div id="mapPlaceList" class="map-place-list"></div>
           </aside>
         </div>
       </div>
     </section>
 
-    <!-- ===================================================
-         DAFTAR DESTINASI
-    ==================================================== -->
-
-    <section
-      class="list-section"
-      id="daftar"
-      aria-labelledby="listTitle"
-    >
+    <section class="links-section" id="informasi" aria-labelledby="linksTitle">
       <div class="container">
         <div class="section-head center">
-          <p class="section-label">
-            Jelajahi Argosari
-          </p>
-
-          <h2 id="listTitle">
-            Pilihan destinasi dan layanan wisata
-          </h2>
-
-          <p>
-            Temukan tempat yang ingin dikunjungi serta
-            informasi pendukung untuk membantu merencanakan
-            perjalanan Anda.
-          </p>
+          <p class="section-label">Informasi Perjalanan</p>
+          <h2 id="linksTitle">Akses penting sebelum berkunjung</h2>
+          <p>Buka panduan, media sosial, layanan perjalanan, dan rute menuju Desa Argosari.</p>
         </div>
-
-        <div
-          class="card-grid"
-          id="destinationGrid"
-          aria-live="polite"
-        ></div>
+        <div class="link-grid" id="importantLinks"></div>
 
         <div class="cta-box">
           <div>
-            <h3>
-              Siap menjelajahi Argosari?
-            </h3>
-
-            <p>
-              Hubungi pengelola untuk informasi rute,
-              homestay, ojek wisata, dan layanan kunjungan.
-            </p>
+            <h3>Perlu bantuan merencanakan kunjungan?</h3>
+            <p>Hubungi pengelola untuk menanyakan rute, layanan wisata, dan informasi kunjungan.</p>
           </div>
-
-          <a
-            class="btn btn-primary"
-            id="waUpdate"
-            href="#kontak"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Hubungi Pengelola
-          </a>
+          <a class="btn btn-primary" id="waUpdate" href="#kontak" target="_blank" rel="noopener noreferrer">Hubungi Pengelola</a>
         </div>
-      </div>
-    </section>
-
-    <!-- ===================================================
-         INFORMASI PERJALANAN
-    ==================================================== -->
-
-    <section
-      class="links-section"
-      aria-labelledby="linksTitle"
-    >
-      <div class="container">
-        <div class="section-head center">
-          <p class="section-label">
-            Informasi Perjalanan
-          </p>
-
-          <h2 id="linksTitle">
-            Akses penting sebelum berkunjung
-          </h2>
-
-          <p>
-            Temukan informasi penginapan, transportasi,
-            panduan wisata, media sosial, dan rute menuju
-            Desa Argosari.
-          </p>
-        </div>
-
-        <div
-          class="link-grid"
-          id="importantLinks"
-        ></div>
       </div>
     </section>
 
     <noscript>
-      <div class="container noscript-message">
-        <p>
-          JavaScript perlu diaktifkan agar peta, daftar
-          destinasi, dan tautan informasi dapat ditampilkan.
-        </p>
-      </div>
+      <div class="container noscript-message"><p>JavaScript perlu diaktifkan agar galeri, peta, dan tautan informasi dapat ditampilkan.</p></div>
     </noscript>
   </main>
 
-  <!-- =====================================================
-       FOOTER
-  ====================================================== -->
-
-  <footer
-    class="footer"
-    id="kontak"
-  >
+  <footer class="footer" id="kontak">
     <div class="container footer-grid">
-
-      <!-- Informasi utama -->
       <div>
         <div class="footer-brand">
-          <img
-            src="./assets/Logo-KKN%20SS.png"
-            alt=""
-            class="footer-logo"
-            width="56"
-            height="56"
-            loading="lazy"
-          />
-
-          <strong>
-            QR-ONE ARGOSARI
-          </strong>
+          <img src="./assets/Logo-KKN%20SS.png" alt="" class="footer-logo" width="56" height="56" loading="lazy" />
+          <strong>QR-ONE ARGOSARI</strong>
         </div>
-
-        <p>
-          Portal informasi wisata Desa Argosari untuk
-          menemukan destinasi, rute perjalanan, fasilitas,
-          dan layanan lokal dalam satu akses.
-        </p>
-
-        <!-- Logo mitra yang tersedia -->
-        <div
-          class="partner-logos"
-          aria-label="Logo mitra dan pendukung"
-        >
-          <img
-            src="./assets/logo-desa.svg"
-            alt="Logo Desa Argosari"
-            width="52"
-            height="52"
-            loading="lazy"
-          />
-
-          <img
-            src="./assets/Lambang UGM-putih.png"
-            alt="Logo kampus"
-            width="52"
-            height="52"
-            loading="lazy"
-          />
+        <p>Portal informasi wisata Desa Argosari untuk menemukan destinasi, layanan lokal, dan rute perjalanan dalam satu akses.</p>
+        <div class="partner-logos" aria-label="Logo mitra dan pendukung">
+          <img src="./assets/logo-desa.svg" alt="Logo Desa Argosari" width="52" height="52" loading="lazy" />
+          <img src="./assets/Lambang%20UGM-putih.png" alt="Logo Universitas Gadjah Mada" width="52" height="52" loading="lazy" />
         </div>
       </div>
 
-      <!-- Menu footer -->
       <div>
-        <h3>
-          Menu
-        </h3>
-
-        <a href="#home">
-          Home
-        </a>
-
-        <a href="#peta">
-          Peta Wisata
-        </a>
-
-        <a href="#daftar">
-          Destinasi
-        </a>
-
-        <a href="#tentang">
-          Tentang
-        </a>
+        <h3>Menu</h3>
+        <a href="#home">Home</a>
+        <a href="#jelajahi">Jelajahi</a>
+        <a href="#peta">Peta Wisata</a>
+        <a href="#informasi">Informasi</a>
       </div>
 
-      <!-- Kontak footer -->
       <div>
-        <h3>
-          Kontak
-        </h3>
-
-        <a
-          id="waFooter"
-          href="#kontak"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          WhatsApp Pengelola
-        </a>
-
-        <a
-          href="https://www.instagram.com/desawisataargosari/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Instagram Desa Wisata
-        </a>
+        <h3>Kontak</h3>
+        <a id="waFooter" href="#kontak" target="_blank" rel="noopener noreferrer">WhatsApp Pengelola</a>
+        <a href="https://www.instagram.com/desawisataargosari/" target="_blank" rel="noopener noreferrer">Instagram Desa Wisata</a>
       </div>
     </div>
-
-    <p class="copyright">
-      © KKN-PPM UGM Swadarma Senduro Sub-Unit Argosari 2026
-    </p>
+    <p class="copyright">© KKN-PPM UGM Swadarma Senduro Sub-Unit Argosari 2026</p>
   </footer>
 
-  <!-- =====================================================
-       NAVIGASI MOBILE
-  ====================================================== -->
-
-  <nav
-    class="mobile-nav"
-    aria-label="Navigasi cepat seluler"
-  >
-
-      <span>
-        Home
-      </span>
-    </a>
-
-      <span>
-        Peta
-      </span>
-    </a>
-
-
-      <span>
-        Wisata
-      </span>
-    </a>
-
-    <a
-      id="waMobile"
-      href="#kontak"
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-
-      <span>
-        Kontak
-      </span>
-    </a>
+  <nav class="mobile-nav" aria-label="Navigasi cepat seluler">
+    <a href="#home"><span aria-hidden="true">⌂</span><span>Home</span></a>
+    <a href="#jelajahi"><span aria-hidden="true">◇</span><span>Jelajahi</span></a>
+    <a href="#peta"><span aria-hidden="true">⌖</span><span>Peta</span></a>
+    <a id="waMobile" href="#kontak" target="_blank" rel="noopener noreferrer"><span aria-hidden="true">✆</span><span>Kontak</span></a>
   </nav>
 
-  <!-- Leaflet harus dimuat sebelum data.js dan script.js -->
-  <script
-    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-    crossorigin=""
-  ></script>
-
-  <script src="./data.js"></script>
-  <script src="./script.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="./data.js?v=20260727-1"></script>
+  <script src="./script.js?v=20260727-1"></script>
 </body>
 </html>

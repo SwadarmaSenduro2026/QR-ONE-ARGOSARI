@@ -3,85 +3,35 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Detail Wisata | QR-ONE ARGOSARI</title>
-  <meta id="detailMetaDescription" name="description" content="Informasi lengkap destinasi dan layanan wisata Desa Argosari." />
+  <title>Informasi Wisata | QR-ONE ARGOSARI</title>
+  <meta id="detailMetaDescription" name="description" content="Informasi destinasi dan layanan wisata Desa Argosari." />
   <meta name="theme-color" content="#173d26" />
-  <link rel="icon" href="assets/logo-qr-one.png" type="image/png" />
-
+  <link rel="icon" href="./assets/Logo-KKN%20SS.png" type="image/png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIINfQF7+zVvr/AhR1N1EZwA7m4r24f8+2c=" crossorigin="" />
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="./style.css?v=20260727-1" />
 </head>
 <body class="detail-body">
-  <a class="skip-link" href="#detailRoot">Lewati ke informasi destinasi</a>
+  <a class="skip-link" href="#detailRoot">Lewati ke informasi utama</a>
 
   <header class="topbar">
-    <nav class="navbar" aria-label="Navigasi halaman detail">
-      <a class="brand" href="index.html">
-        <img src="assets/logo-qr-one.png" alt="Logo QR-ONE Argosari" />
-        <span>QR-ONE<br><strong>ARGOSARI</strong></span>
+    <nav class="navbar" aria-label="Navigasi halaman informasi">
+      <a class="brand" href="./index.html">
+        <img src="./assets/Logo-KKN%20SS.png" alt="" width="48" height="48" />
+        <span>QR-ONE<strong>ARGOSARI</strong></span>
       </a>
-      <a class="back-link" href="index.html#daftar">← Kembali ke Destinasi</a>
+      <a class="back-link" href="./index.html#jelajahi">← Kembali ke Jelajahi</a>
     </nav>
   </header>
 
-  <main id="detailRoot">
-    <section class="detail-hero" aria-labelledby="detailTitle">
-      <div class="container detail-hero-grid">
-        <div>
-          <p class="kicker" id="detailCategory">Informasi Wisata</p>
-          <h1 id="detailTitle">Memuat informasi...</h1>
-          <p class="hero-text" id="detailSummary"></p>
-          <div class="hero-actions">
-            <a class="btn btn-primary" id="routeButton" target="_blank" rel="noopener noreferrer">Buka Rute</a>
-            <a class="btn btn-outline" href="index.html#peta">Lihat Peta Utama</a>
-          </div>
-        </div>
-        <img id="detailImage" class="detail-image" src="assets/photos/hero-argosari.webp" alt="Panorama wisata Desa Argosari" />
-      </div>
-    </section>
+  <main id="detailRoot" aria-live="polite"></main>
 
-    <section class="detail-content-section">
-      <div class="container detail-layout">
-        <article class="detail-main-card">
-          <span class="chip" id="detailStatus">Informasi</span>
-          <h2>Tentang destinasi</h2>
-          <p id="detailDescription"></p>
-
-          <div class="info-grid">
-            <div class="info-box">
-              <h3>Waktu terbaik</h3>
-              <p id="detailBestTime"></p>
-            </div>
-            <div class="info-box">
-              <h3>Alamat atau posisi</h3>
-              <p id="detailAddress"></p>
-            </div>
-          </div>
-
-          <h3>Fasilitas dan layanan</h3>
-          <ul class="check-list" id="facilityList"></ul>
-          <h3>Tips kunjungan</h3>
-          <ul class="check-list" id="tipsList"></ul>
-        </article>
-
-        <aside class="detail-side-card">
-          <h2>Lokasi pada peta</h2>
-          <div id="detailMap" class="detail-map" aria-label="Peta lokasi destinasi"></div>
-          <div id="detailMapFallback" class="detail-map-fallback" hidden>Peta tidak dapat dimuat. Gunakan tombol Buka Rute.</div>
-          <p class="map-note">Gunakan peta atau tombol rute untuk menuju lokasi melalui aplikasi navigasi.</p>
-          <a class="btn btn-soft full" id="waAsk" target="_blank" rel="noopener noreferrer">Tanya Pengelola</a>
-        </aside>
-      </div>
-    </section>
-  </main>
-
-  <footer class="detail-footer"><div class="container"><p>© 2026 QR-ONE ARGOSARI • Desa Argosari, Senduro, Lumajang</p></div></footer>
+  <footer class="detail-footer"><div class="container"><p>© KKN-PPM UGM Swadarma Senduro Sub-Unit Argosari 2026</p></div></footer>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-  <script src="data.js"></script>
-  <script src="detail.js"></script>
+  <script src="./data.js?v=20260727-1"></script>
+  <script src="./detail.js?v=20260727-1"></script>
 </body>
 </html>

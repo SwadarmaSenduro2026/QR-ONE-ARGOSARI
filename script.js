@@ -1,16 +1,15 @@
 /* =========================================================
    QR-ONE ARGOSARI — SCRIPT HALAMAN UTAMA
-   Peta sengaja dibuat sederhana agar ringan dan stabil.
 ========================================================= */
 
-const $ = (selector, parent = document) => parent.querySelector(selector);
-const $$ = (selector, parent = document) => [...parent.querySelectorAll(selector)];
+const $ = (selector, root = document) => root.querySelector(selector);
+const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
 
 const state = {
+  sliderIndex: 0,
   map: null,
   markerGroup: null,
   markers: new Map(),
-  sliderIndex: 0,
   resizeTimer: null
 };
 
@@ -23,16 +22,19 @@ function escapeHtml(value) {
     .replaceAll("'", "&#039;");
 }
 
-function categoryLabel(id) {
-  return CATEGORIES[id] || id;
+function categoryLabel(category) {
+  return CATEGORIES[category] || category || "Informasi";
 }
 
-function detailUrl(item) {
+function itemUrl(item) {
+  if (item.kind === "collection") {
+    return `detail.html?collection=${encodeURIComponent(item.id)}`;
+  }
   return `detail.html?id=${encodeURIComponent(item.id)}`;
 }
 
 function routeUrl(item) {
-  return `https://www.google.com/maps/dir/?api=1&destination=${item.lat},${item.lng}`;
+  return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`${item.lat},${item.lng}`)}`;
 }
 
 function whatsappUrl(message = SITE_CONFIG.whatsappMessage) {
@@ -72,107 +74,71 @@ function setupNavigation() {
 
 function renderSlider() {
   const track = $("#sliderTrack");
-  if (!track || DESTINATIONS.length === 0) return;
-  const item = DESTINATIONS[state.sliderIndex % DESTINATIONS.length];
+  const dots = $("#sliderDots");
+  if (!track || !dots || EXPLORE_ITEMS.length === 0) return;
+
+  const item = EXPLORE_ITEMS[state.sliderIndex % EXPLORE_ITEMS.length];
+  const actionText = item.kind === "collection" ? "Buka daftar tempat" : "Lihat informasi lengkap";
 
   track.innerHTML = `
-    <article class="slide-card">
-      <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.title)}" loading="lazy" width="900" height="560" />
-      <div class="slide-content">
-        <span>${escapeHtml(item.icon)} ${escapeHtml(categoryLabel(item.category))}</span>
+    <a class="explore-card" href="${itemUrl(item)}" aria-label="${escapeHtml(actionText)}: ${escapeHtml(item.title)}">
+      <div class="explore-image">
+        <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.title)}" loading="lazy" width="900" height="560" />
+        <span class="explore-badge">${escapeHtml(item.status)}</span>
+      </div>
+      <div class="explore-content">
+        <span class="explore-category">${escapeHtml(item.icon)} ${escapeHtml(categoryLabel(item.category))}</span>
         <h3>${escapeHtml(item.title)}</h3>
         <p>${escapeHtml(item.summary)}</p>
-        <a href="${detailUrl(item)}">Lihat informasi →</a>
+        <span class="explore-action">${escapeHtml(actionText)} <span aria-hidden="true">→</span></span>
       </div>
-    </article>`;
+    </a>`;
+
+  dots.innerHTML = EXPLORE_ITEMS.map((entry, index) => `
+    <button class="slider-dot${index === state.sliderIndex ? " active" : ""}" type="button" data-slide-index="${index}" aria-label="Tampilkan ${escapeHtml(entry.title)}" aria-current="${index === state.sliderIndex ? "true" : "false"}"></button>`).join("");
+
+  $$('[data-slide-index]', dots).forEach((button) => {
+    button.addEventListener("click", () => {
+      state.sliderIndex = Number(button.dataset.slideIndex);
+      renderSlider();
+    });
+  });
 }
 
 function setupSlider() {
+  const slider = $(".explore-slider");
   const prev = $(".slider-btn.prev");
   const next = $(".slider-btn.next");
-  if (!prev || !next || DESTINATIONS.length === 0) return;
+  if (!slider || !prev || !next || EXPLORE_ITEMS.length === 0) return;
 
   const move = (direction) => {
-    state.sliderIndex = (state.sliderIndex + direction + DESTINATIONS.length) % DESTINATIONS.length;
+    state.sliderIndex = (state.sliderIndex + direction + EXPLORE_ITEMS.length) % EXPLORE_ITEMS.length;
     renderSlider();
   };
 
   prev.addEventListener("click", () => move(-1));
   next.addEventListener("click", () => move(1));
+  slider.addEventListener("keydown", (event) => {
+    if (event.key === "ArrowLeft") move(-1);
+    if (event.key === "ArrowRight") move(1);
+  });
+
   renderSlider();
 }
 
-function renderDestinationCards() {
-  const grid = $("#destinationGrid");
-  if (!grid) return;
-
-  grid.innerHTML = DESTINATIONS.map((item) => `
-    <article class="tour-card">
-      <div class="tour-image">
-        <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.title)}" loading="lazy" width="900" height="560" />
-        <span class="tour-badge">${escapeHtml(item.status)}</span>
-      </div>
-      <div class="tour-body">
-        <p class="tour-category">${escapeHtml(item.icon)} ${escapeHtml(categoryLabel(item.category))}</p>
-        <h3>${escapeHtml(item.title)}</h3>
-        <p>${escapeHtml(item.summary)}</p>
-        <div class="card-actions">
-          <button class="btn btn-soft small" type="button" data-focus-map="${escapeHtml(item.id)}">Lihat di Peta</button>
-          <a class="btn btn-primary small" href="${detailUrl(item)}">Informasi Lengkap</a>
-        </div>
-      </div>
-    </article>`).join("");
-
-  $$('[data-focus-map]', grid).forEach((button) => {
-    button.addEventListener("click", () => focusDestination(button.dataset.focusMap, true));
-  });
-}
-
 function renderImportantLinks() {
-  const target =
-    document.getElementById("importantLinks");
+  const target = $("#importantLinks");
+  if (!target) return;
 
-  if (!target) {
-    return;
-  }
-
-  target.innerHTML = IMPORTANT_LINKS
-    .map(
-      (link) => `
-        <a
-          class="info-link"
-          href="${link.url}"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="Buka ${link.title}"
-        >
-          <div class="info-illustration">
-            <img
-              src="${link.image}"
-              alt="${link.imageAlt || link.title}"
-              width="600"
-              height="400"
-              loading="lazy"
-              decoding="async"
-            />
-          </div>
-
-          <strong>
-            ${link.title}
-          </strong>
-
-          <p>
-            ${link.description}
-          </p>
-
-          <span class="info-link-action">
-            Buka informasi
-            <span aria-hidden="true">→</span>
-          </span>
-        </a>
-      `
-    )
-    .join("");
+  target.innerHTML = IMPORTANT_LINKS.map((link) => `
+    <a class="info-link" href="${escapeHtml(link.url)}" target="_blank" rel="noopener noreferrer" aria-label="Buka ${escapeHtml(link.title)}">
+      <div class="info-illustration">
+        <img src="${escapeHtml(link.image)}" alt="${escapeHtml(link.imageAlt || link.title)}" width="80" height="80" loading="lazy" decoding="async" />
+      </div>
+      <strong>${escapeHtml(link.title)}</strong>
+      <p>${escapeHtml(link.description)}</p>
+      <span class="info-link-action">Buka informasi <span aria-hidden="true">→</span></span>
+    </a>`).join("");
 }
 
 function popupHtml(item) {
@@ -181,7 +147,7 @@ function popupHtml(item) {
       <strong>${escapeHtml(item.title)}</strong>
       <p>${escapeHtml(item.summary)}</p>
       <div class="map-popup-actions">
-        <a href="${detailUrl(item)}">Detail</a>
+        <a href="${itemUrl(item)}">Detail</a>
         <a href="${routeUrl(item)}" target="_blank" rel="noopener noreferrer">Buka Rute</a>
       </div>
     </div>`;
@@ -221,7 +187,7 @@ function refreshMap(delay = 0) {
 }
 
 function initMap() {
-  const mapElement = document.getElementById("argosariMap");
+  const mapElement = $("#argosariMap");
   if (!mapElement) return;
   if (typeof window.L === "undefined") {
     showMapError("Leaflet tidak dapat dimuat. Periksa koneksi internet lalu muat ulang halaman.");
@@ -265,9 +231,9 @@ function initMap() {
       state.map.fitBounds(bounds, { padding: [36, 36], maxZoom: 14, animate: false });
     }
 
-    state.map.whenReady(() => refreshMap(50));
+    state.map.whenReady(() => refreshMap(60));
     requestAnimationFrame(() => requestAnimationFrame(() => refreshMap(0)));
-    window.setTimeout(() => refreshMap(0), 300);
+    window.setTimeout(() => refreshMap(0), 320);
   } catch (error) {
     console.error("Peta gagal dibuat:", error);
     showMapError("Peta gagal dibuat. Muat ulang halaman atau periksa Console browser.");
@@ -280,7 +246,7 @@ function focusDestination(id, scrollToMap = true) {
   if (!item || !marker || !state.map) return;
 
   if (scrollToMap) {
-    document.getElementById("peta")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    $("#peta")?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
   window.setTimeout(() => {
@@ -298,7 +264,9 @@ function setupMapRefresh() {
   }, { passive: true });
 
   window.addEventListener("orientationchange", () => refreshMap(280), { passive: true });
-  $$('a[href="#peta"]').forEach((link) => link.addEventListener("click", () => refreshMap(450)));
+  $$('#navLinks a[href="#peta"], .hero-actions a[href="#peta"], .mobile-nav a[href="#peta"]').forEach((link) => {
+    link.addEventListener("click", () => refreshMap(450));
+  });
   if (document.fonts?.ready) document.fonts.ready.then(() => refreshMap(60));
   if (window.location.hash === "#peta") refreshMap(300);
 }
@@ -315,7 +283,6 @@ function boot() {
   setupImageFallbacks();
   setupNavigation();
   setupSlider();
-  renderDestinationCards();
   renderImportantLinks();
   renderMapPlaceList();
   setupContactLinks();
