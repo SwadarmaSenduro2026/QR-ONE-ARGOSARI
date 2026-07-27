@@ -108,7 +108,7 @@ const DESTINATIONS = [
     title: "Rest Area 1 B29",
     category: "fasilitas",
     icon: "🚻",
-    image: "assets/photos/rest-area-b29.webp",
+    image: "assets/restarea1.webp",
     lat: -7.980441,
     lng: 113.022133,
     status: "Fasilitas Pendukung",
