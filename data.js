@@ -111,25 +111,40 @@ const SERVICE_COLLECTIONS = [
     title: "Homestay dan Penginapan",
     category: "homestay",
     icon: "⌂",
-    image: "assets/gallery-2.svg",
-    status: "Direktori Layanan",
-    summary: "Buka daftar pilihan area penginapan dan akses pencarian lokasinya melalui Google Maps.",
-    intro: "Pilih area penginapan yang sesuai. Tautan saat ini membuka hasil pencarian Google Maps dan dapat diganti dengan lokasi homestay aktual pada data.js.",
+    image: "assets/homestay-direktori.webp",
+    status: "5 Pilihan Penginapan",
+    summary: "Temukan pilihan homestay dan penginapan di Desa Argosari serta buka lokasinya melalui Google Maps.",
+    intro: "Pilih tempat menginap untuk melihat alamat dan membuka pencarian lokasinya di Google Maps.",
     places: [
       {
-        name: "Homestay di Pusat Desa Argosari",
-        description: "Pencarian penginapan di sekitar pusat Desa Argosari.",
-        mapUrl: "https://www.google.com/maps/search/?api=1&query=homestay+Desa+Argosari+Senduro+Lumajang"
+        name: "Wahyu Home Stay Argosari B29",
+        address: "Argosari, Kecamatan Senduro, Kabupaten Lumajang, Jawa Timur 67361",
+        description: "Homestay di kawasan Argosari yang dapat dijadikan pilihan sebelum menjelajahi wisata B29.",
+        mapUrl: "https://www.google.com/maps/search/?api=1&query=Wahyu+Home+Stay+Argosari+B29%2C+Argosari%2C+Senduro%2C+Lumajang"
       },
       {
-        name: "Homestay di Jalur Wisata B29",
-        description: "Pencarian penginapan yang berada di sekitar jalur menuju Puncak B29.",
-        mapUrl: "https://www.google.com/maps/search/?api=1&query=homestay+Puncak+B29+Argosari+Lumajang"
+        name: "Sukarto Ojek & Penginapan B29",
+        address: "Argosari, Kecamatan Senduro, Kabupaten Lumajang, Jawa Timur 67361",
+        description: "Layanan penginapan dan ojek lokal di kawasan Argosari menuju B29.",
+        mapUrl: "https://www.google.com/maps/search/?api=1&query=Sukarto+Ojek+dan+Penginapan+B29%2C+Argosari%2C+Senduro%2C+Lumajang"
       },
       {
-        name: "Penginapan di Sekitar Senduro",
-        description: "Pilihan pencarian penginapan pendukung di wilayah Senduro.",
-        mapUrl: "https://www.google.com/maps/search/?api=1&query=penginapan+Senduro+Lumajang"
+        name: "Siwa Lingga Homestay",
+        address: "Desa Argosari B29, RT 02/RW 02, Argosari, Kecamatan Senduro, Kabupaten Lumajang, Jawa Timur 67361",
+        description: "Homestay warga yang berada di kawasan Desa Argosari dan jalur wisata B29.",
+        mapUrl: "https://www.google.com/maps/search/?api=1&query=Siwa+Lingga+Homestay%2C+Argosari+B29%2C+Senduro%2C+Lumajang"
+      },
+      {
+        name: "Penginapan Mbak Fitri B29",
+        address: "RT 001/RW 005, Dusun Gedok, Argosari, Senduro, Kabupaten Lumajang, Jawa Timur 67361",
+        description: "Pilihan penginapan di Dusun Gedok, Desa Argosari, untuk wisatawan kawasan B29.",
+        mapUrl: "https://www.google.com/maps/search/?api=1&query=Penginapan+Mbak+Fitri+B29%2C+Dusun+Gedok%2C+Argosari%2C+Senduro%2C+Lumajang"
+      },
+      {
+        name: "Tirta Homestay",
+        address: "RT 03/RW 05, Dusun Gedok, Argosari, Kecamatan Senduro, Kabupaten Lumajang, Jawa Timur 67361",
+        description: "Homestay yang berada di Dusun Gedok, Desa Argosari.",
+        mapUrl: "https://www.google.com/maps/search/?api=1&query=Tirta+Homestay%2C+Dusun+Gedok%2C+Argosari%2C+Senduro%2C+Lumajang"
       }
     ]
   },
@@ -139,25 +154,22 @@ const SERVICE_COLLECTIONS = [
     title: "Warung, Kuliner, dan UMKM",
     category: "umkm",
     icon: "◎",
-    image: "assets/gallery-3.svg",
-    status: "Direktori Usaha Lokal",
-    summary: "Temukan kategori warung, kuliner, dan produk lokal yang dapat dikunjungi di sekitar Argosari.",
-    intro: "Pilih kategori usaha lokal untuk membukanya di Google Maps. Ganti daftar ini dengan nama usaha aktual setelah data lapangan tersedia.",
+    image: "assets/warung-umkm-direktori.webp",
+    status: "2 Usaha Lokal",
+    summary: "Temukan warung dan usaha kuliner yang tercatat di Desa Argosari dan buka lokasinya melalui Google Maps.",
+    intro: "Pilih warung atau usaha lokal untuk melihat alamat dan membuka pencarian lokasinya di Google Maps.",
     places: [
       {
-        name: "Warung di Desa Argosari",
-        description: "Pencarian warung makan dan minum di kawasan Desa Argosari.",
-        mapUrl: "https://www.google.com/maps/search/?api=1&query=warung+Desa+Argosari+Senduro+Lumajang"
+        name: "Warkop Cak Slamet B29 Gedok",
+        address: "2279+M4, Argosari, Kabupaten Lumajang, Jawa Timur",
+        description: "Warung kopi lokal di kawasan Gedok, Argosari, yang dapat menjadi tempat singgah wisatawan.",
+        mapUrl: "https://www.google.com/maps/search/?api=1&query=Warkop+Cak+Slamet+B29+Gedok%2C+Argosari%2C+Senduro%2C+Lumajang"
       },
       {
-        name: "Kuliner di Jalur Wisata B29",
-        description: "Pencarian tempat makan di sekitar jalur perjalanan menuju B29.",
-        mapUrl: "https://www.google.com/maps/search/?api=1&query=kuliner+Puncak+B29+Argosari+Lumajang"
-      },
-      {
-        name: "UMKM dan Oleh-oleh Argosari",
-        description: "Pencarian produk lokal dan oleh-oleh di sekitar Argosari.",
-        mapUrl: "https://www.google.com/maps/search/?api=1&query=UMKM+oleh-oleh+Argosari+Senduro+Lumajang"
+        name: "Kopi Argosari",
+        address: "2269+W7M, Argosari, Senduro, Kabupaten Lumajang, Jawa Timur 67361",
+        description: "Usaha kopi lokal di Desa Argosari yang dapat dikunjungi selama perjalanan wisata.",
+        mapUrl: "https://www.google.com/maps/search/?api=1&query=Kopi+Argosari%2C+Senduro%2C+Lumajang"
       }
     ]
   }
