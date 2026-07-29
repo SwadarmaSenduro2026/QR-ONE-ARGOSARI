@@ -180,7 +180,7 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid 
 .footer-grid a { display: block; margin: 9px 0; font-size: .87rem; }
 .footer-grid a:hover { color: var(--gold); }
 .partner-logos { margin-top: 20px; display: flex; align-items: center; flex-wrap: wrap; gap: 14px; }
-.partner-logos img { width: 52px; height: 52px; padding: 5px; object-fit: contain; background: rgba(255,255,255,.94); border-radius: 12px; }
+.partner-logos img { width: 52px; height: 52px; padding: 5px; object-fit: contain; background: transparent; border-radius: 0; box-shadow: none;}
 .copyright { margin: 54px 0 0; padding: 19px 20px; color: rgba(255,255,255,.56); border-top: 1px solid rgba(255,255,255,.12); font-size: .74rem; text-align: center; }
 .mobile-nav { display: none; }
 
