@@ -10,7 +10,7 @@ const SITE_CONFIG = {
   mapCenter: [-7.9825, 113.0095],
   mapZoom: 13,
   fallbackImage: "assets/panorama_argosari.webp",
-  whatsappNumber: "6282139497797",
+  whatsappNumber: "6281359652354",
   whatsappMessage: "Halo Admin QR-ONE Argosari, saya ingin memperoleh informasi wisata Desa Argosari.",
   tileAttribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 };
