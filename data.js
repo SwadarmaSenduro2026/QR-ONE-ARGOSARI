@@ -28,7 +28,7 @@ const DESTINATIONS = [
   {
     id: "b29",
     kind: "destination",
-    title: "Puncak B29 / Negeri di Atas Awan",
+    title: "Puncak B29",
     category: "wisata",
     icon: "▲",
     image: "assets/b29.webp",
@@ -38,8 +38,8 @@ const DESTINATIONS = [
     summary: "Nikmati matahari terbit, lautan awan, dan panorama pegunungan dari salah satu ikon wisata Argosari.",
     description: "Puncak B29 merupakan salah satu tujuan utama di Desa Argosari. Pengunjung dapat menikmati panorama dataran tinggi, hamparan awan, dan suasana pagi yang khas. Jalur menuju lokasi menanjak, sehingga pengunjung perlu menyiapkan kondisi fisik, kendaraan, dan perlengkapan yang sesuai.",
     address: "Kawasan Puncak B29, Desa Argosari, Kecamatan Senduro, Kabupaten Lumajang, Jawa Timur.",
-    bestTime: "Sekitar pukul 04.30–08.00 WIB saat cuaca cerah.",
-    facilities: ["Area pandang", "Spot foto", "Akses ojek wisata", "Warung sekitar kawasan", "Rute Google Maps"],
+    bestTime: "Pantau perkiraan cuaca agar tidak menemui kabut saat perjalanan menuju Puncak B29   ",
+    facilities: ["Area pandang", "Spot foto", "Akses ojek wisata", "Warung sekitar kawasan"],
     tips: ["Datang lebih awal untuk menikmati matahari terbit.", "Gunakan jaket dan pakaian hangat.", "Pastikan kendaraan siap melewati jalur menanjak.", "Ikuti arahan pengelola atau warga setempat."]
   },
   {
@@ -70,7 +70,7 @@ const DESTINATIONS = [
     lng: 113.013113,
     status: "Wisata Budaya",
     summary: "Kenali kehidupan masyarakat, pertanian dataran tinggi, dan budaya Tengger di Desa Argosari.",
-    description: "Kampung Budaya Tengger menghadirkan pengalaman untuk mengenal kehidupan masyarakat dataran tinggi Argosari, aktivitas pertanian, budaya lokal, serta keramahan warga.",
+    description: "Kampung Argosari yang didominasi oleh suku Tengger menghadirkan pengalaman untuk mengenal kehidupan masyarakat dataran tinggi Argosari, aktivitas pertanian, budaya lokal, serta keramahan warga.",
     address: "Pusat Desa Argosari, Kecamatan Senduro, Kabupaten Lumajang, Jawa Timur.",
     bestTime: "Pagi hingga sore hari atau menyesuaikan jadwal kegiatan budaya.",
     facilities: ["Informasi desa", "Homestay warga", "Produk lokal", "Kontak pengelola"],
@@ -179,7 +179,8 @@ const IMPORTANT_LINKS = [
     image: "assets/ojek.png",
     imageAlt: "Ilustrasi layanan ojek dan homestay Desa Argosari",
     description: "Akses informasi penginapan dan transportasi lokal untuk mendukung perjalanan Anda.",
-    url: "https://drive.google.com/file/d/1sqlLbXMqJCVpAdCNrxgeVhsjM_SyfOe4/view?usp=sharing"
+    url: "https://wa.me/6281359652354"
+
   },
   {
     title: "Booklet Desa Argosari",
