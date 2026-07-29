@@ -190,11 +190,7 @@ function renderCollection(collection) {
 
         <div class="place-grid">${cards}</div>
 
-        <p class="data-note">
-          <strong>Sumber data:</strong>
-          ${escapeHtml(collection.sourceNote || "Daftar tempat berasal dari data yang diberikan pengelola.")}
-          Tombol lokasi membuka pencarian Google Maps berdasarkan nama dan alamat yang tercatat. Pastikan kembali posisi pin sebelum berangkat.
-        </p>
+
       </div>
     </section>`;
 
