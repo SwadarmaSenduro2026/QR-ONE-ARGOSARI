@@ -120,48 +120,81 @@ function renderDestination(item) {
 function renderCollection(collection) {
   const root = $detail("#detailRoot");
   document.title = `${collection.title} | QR-ONE ARGOSARI`;
+
   const meta = $detail("#detailMetaDescription");
   if (meta) meta.content = collection.summary;
 
-  const places = collection.places || [];
+  const places = Array.isArray(collection.places) ? collection.places : [];
+  const totalLabel = `${places.length} ${places.length === 1 ? "tempat" : "tempat"}`;
+
   const cards = places.length
     ? places.map((place, index) => `
-        <a class="place-card" href="${escapeHtml(place.mapUrl)}" target="_blank" rel="noopener noreferrer">
+        <a
+          class="place-card"
+          href="${escapeHtml(place.mapUrl)}"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Buka ${escapeHtml(place.name)} di Google Maps"
+        >
           <span class="place-number">${String(index + 1).padStart(2, "0")}</span>
-          <div>
+
+          <div class="place-card-content">
+            <span class="place-type">${escapeHtml(place.type || categoryLabel(collection.category))}</span>
             <h3>${escapeHtml(place.name)}</h3>
-            <p>${escapeHtml(place.description)}</p>
-            ${place.address ? `<p class="place-address"><strong>Alamat:</strong> ${escapeHtml(place.address)}</p>` : ""}
-            <span class="place-action">Buka di Google Maps <span aria-hidden="true">↗</span></span>
+
+            <p class="place-address">
+              <strong>Alamat</strong>
+              <span>${escapeHtml(place.address || "Alamat belum tersedia")}</span>
+            </p>
+
+            <span class="place-action">
+              Buka di Google Maps
+              <span aria-hidden="true">↗</span>
+            </span>
           </div>
         </a>`).join("")
     : `<div class="directory-empty"><p>Daftar tempat belum tersedia.</p></div>`;
 
   root.innerHTML = `
-    <section class="directory-hero">
+    <section class="directory-hero" aria-labelledby="directoryTitle">
       <div class="container directory-hero-grid">
         <div>
           <p class="kicker">${escapeHtml(collection.icon)} ${escapeHtml(categoryLabel(collection.category))}</p>
-          <h1>${escapeHtml(collection.title)}</h1>
+          <h1 id="directoryTitle">${escapeHtml(collection.title)}</h1>
           <p class="hero-text">${escapeHtml(collection.summary)}</p>
+
           <div class="hero-actions">
-            <a class="btn btn-primary" href="./index.html#peta">Lihat Peta Utama</a>
+            <a class="btn btn-primary" href="#daftarTempat">Lihat ${escapeHtml(totalLabel)}</a>
             <a class="btn btn-outline" href="${escapeHtml(whatsappUrl(collection.title))}" target="_blank" rel="noopener noreferrer">Tanya Pengelola</a>
           </div>
         </div>
-        <img class="directory-image" src="${escapeHtml(collection.image)}" alt="Ilustrasi ${escapeHtml(collection.title)}" width="1000" height="750" />
+
+        <img
+          class="directory-image"
+          src="${escapeHtml(collection.image)}"
+          alt="Ilustrasi ${escapeHtml(collection.title)}"
+          width="1000"
+          height="750"
+        />
       </div>
     </section>
 
-    <section class="directory-section">
+    <section class="directory-section" id="daftarTempat" aria-labelledby="directoryListTitle">
       <div class="container">
         <div class="directory-heading">
           <p class="section-label">Daftar tempat</p>
-          <h2>Pilih lokasi yang ingin dibuka</h2>
+          <h2 id="directoryListTitle">${escapeHtml(collection.title)} di Argosari</h2>
           <p>${escapeHtml(collection.intro)}</p>
+          <span class="directory-count">${escapeHtml(totalLabel)}</span>
         </div>
+
         <div class="place-grid">${cards}</div>
-        <p class="data-note"><strong>Catatan:</strong> tombol lokasi membuka pencarian Google Maps berdasarkan nama dan alamat yang tercatat. Pastikan kembali posisi pin sebelum berangkat.</p>
+
+        <p class="data-note">
+          <strong>Sumber data:</strong>
+          ${escapeHtml(collection.sourceNote || "Daftar tempat berasal dari data yang diberikan pengelola.")}
+          Tombol lokasi membuka pencarian Google Maps berdasarkan nama dan alamat yang tercatat. Pastikan kembali posisi pin sebelum berangkat.
+        </p>
       </div>
     </section>`;
 

@@ -93,7 +93,7 @@ function renderSlider() {
 
   state.sliderIndex = (state.sliderIndex + EXPLORE_ITEMS.length) % EXPLORE_ITEMS.length;
   const item = EXPLORE_ITEMS[state.sliderIndex];
-  const actionText = item.kind === "collection" ? "Buka daftar tempat" : "Lihat informasi lengkap";
+  const actionText = item.kind === "collection" ? "Lihat daftar lengkap" : "Lihat informasi lengkap";
 
   track.innerHTML = `
     <a class="explore-card" href="${escapeHtml(itemUrl(item))}" aria-label="${escapeHtml(actionText)}: ${escapeHtml(item.title)}">
