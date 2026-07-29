@@ -193,7 +193,7 @@ const IMPORTANT_LINKS = [
     image: "assets/instagram.png",
     imageAlt: "Ilustrasi kamera untuk Instagram Desa Wisata Argosari",
     description: "Lihat dokumentasi, inspirasi perjalanan, dan informasi terbaru mengenai wisata Argosari.",
-    url: "https://www.instagram.com/desawisataargosari/"
+    url: "https://www.instagram.com/puncakb29/"
   },
   {
     title: "Rute Menuju Desa Argosari",
