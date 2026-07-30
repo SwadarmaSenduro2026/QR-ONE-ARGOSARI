@@ -187,6 +187,67 @@ const EXPLORE_ITEMS = [
   DESTINATIONS[3]
 ];
 
+const BOOKLET_ICON = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="80"
+    height="80"
+    viewBox="0 0 80 80"
+    fill="none"
+  >
+    <path
+      d="M14 17H31C36 17 40 21 40 26V63C40 58 36 54 31 54H14V17Z"
+      stroke="#6F9180"
+      stroke-width="2.8"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+
+    <path
+      d="M66 17H49C44 17 40 21 40 26V63C40 58 44 54 49 54H66V17Z"
+      stroke="#6F9180"
+      stroke-width="2.8"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+
+    <path
+      d="M22 28H31"
+      stroke="#6F9180"
+      stroke-width="2.8"
+      stroke-linecap="round"
+    />
+
+    <path
+      d="M22 36H31"
+      stroke="#6F9180"
+      stroke-width="2.8"
+      stroke-linecap="round"
+    />
+
+    <path
+      d="M49 28H58"
+      stroke="#6F9180"
+      stroke-width="2.8"
+      stroke-linecap="round"
+    />
+
+    <path
+      d="M49 36H58"
+      stroke="#6F9180"
+      stroke-width="2.8"
+      stroke-linecap="round"
+    />
+
+    <path
+      d="M40 26V63"
+      stroke="#6F9180"
+      stroke-width="2.8"
+      stroke-linecap="round"
+    />
+  </svg>
+`)}`;
+
 const IMPORTANT_LINKS = [
   {
     title: "Informasi Ojek dan Homestay",
@@ -196,14 +257,15 @@ const IMPORTANT_LINKS = [
       "Akses informasi penginapan dan transportasi lokal untuk mendukung perjalanan Anda.",
     url: "https://wa.me/6281359652354"
   },
-  {
-    title: "Booklet Desa Argosari",
-    image: "./assets/peta.png?v=5",
-    imageAlt: "Ikon booklet dan peta Desa Argosari",
-    description:
-      "Pelajari daya tarik, fasilitas, layanan, dan informasi umum sebelum berkunjung.",
-    url: "https://drive.google.com/file/d/16EdlydnB7fQv8IKdIQ6SI-QxZBThyHrb/view?usp=drive_link"
-  },
+{
+  title: "Booklet Desa Argosari",
+  image: BOOKLET_ICON,
+  imageAlt: "Ikon booklet Desa Argosari",
+  description:
+    "Pelajari daya tarik, fasilitas, layanan, dan informasi umum sebelum berkunjung.",
+  url:
+    "https://drive.google.com/file/d/1lynH9S6S6cacOb6_g4D3ML0p147BaRYo/view?usp=sharing"
+},
   {
     title: "Instagram Desa Wisata",
     image: "./assets/instagram.png?v=4",
