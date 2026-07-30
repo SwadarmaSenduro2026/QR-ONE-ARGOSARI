@@ -202,7 +202,7 @@ const IMPORTANT_LINKS = [
     imageAlt: "Ikon booklet dan peta Desa Argosari",
     description:
       "Pelajari daya tarik, fasilitas, layanan, dan informasi umum sebelum berkunjung.",
-    url: "https://drive.google.com/file/d/1lynH9S6S6cacOb6_g4D3ML0p147BaRYo/view?usp=sharing"
+    url: "https://drive.google.com/file/d/16EdlydnB7fQv8IKdIQ6SI-QxZBThyHrb/view?usp=drive_link"
   },
   {
     title: "Instagram Desa Wisata",
