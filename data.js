@@ -190,31 +190,34 @@ const EXPLORE_ITEMS = [
 const IMPORTANT_LINKS = [
   {
     title: "Informasi Ojek dan Homestay",
-    image: "assets/ojek.png",
-    imageAlt: "Ilustrasi layanan ojek dan homestay Desa Argosari",
-    description: "Akses informasi penginapan dan transportasi lokal untuk mendukung perjalanan Anda.",
+    image: "./assets/ojek.png?v=4",
+    imageAlt: "Ikon layanan ojek dan homestay Desa Argosari",
+    description:
+      "Akses informasi penginapan dan transportasi lokal untuk mendukung perjalanan Anda.",
     url: "https://wa.me/6281359652354"
-
   },
   {
     title: "Booklet Desa Argosari",
-    image: "assets/booklet.png",
-    imageAlt: "Ilustrasi booklet panduan wisata Desa Argosari",
-    description: "Pelajari daya tarik, fasilitas, layanan, dan informasi umum sebelum berkunjung.",
+    image: "./assets/peta.png?v=4",
+    imageAlt: "Ikon booklet dan peta Desa Argosari",
+    description:
+      "Pelajari daya tarik, fasilitas, layanan, dan informasi umum sebelum berkunjung.",
     url: "https://drive.google.com/file/d/1lynH9S6S6cacOb6_g4D3ML0p147BaRYo/view?usp=sharing"
   },
   {
     title: "Instagram Desa Wisata",
-    image: "assets/instagram.png",
-    imageAlt: "Ilustrasi kamera untuk Instagram Desa Wisata Argosari",
-    description: "Lihat dokumentasi, inspirasi perjalanan, dan informasi terbaru mengenai wisata Argosari.",
+    image: "./assets/instagram.png?v=4",
+    imageAlt: "Ikon Instagram Desa Wisata Argosari",
+    description:
+      "Lihat dokumentasi, inspirasi perjalanan, dan informasi terbaru mengenai wisata Argosari.",
     url: "https://www.instagram.com/puncakb29/"
   },
   {
     title: "Rute Menuju Desa Argosari",
-    image: "assets/rute.png",
-    imageAlt: "Ilustrasi peta dan rute perjalanan menuju Desa Argosari",
-    description: "Buka petunjuk perjalanan menuju Desa Argosari melalui Google Maps.",
+    image: "./assets/rute.png?v=4",
+    imageAlt: "Ikon rute perjalanan menuju Desa Argosari",
+    description:
+      "Buka petunjuk perjalanan menuju Desa Argosari melalui Google Maps.",
     url: "https://www.google.com/maps/search/?api=1&query=Argosari,+Senduro,+Lumajang"
   }
 ];
