@@ -198,7 +198,7 @@ const IMPORTANT_LINKS = [
   },
   {
     title: "Booklet Desa Argosari",
-    image: "./assets/peta.png?v=4",
+    image: "./assets/peta.png?v=5",
     imageAlt: "Ikon booklet dan peta Desa Argosari",
     description:
       "Pelajari daya tarik, fasilitas, layanan, dan informasi umum sebelum berkunjung.",
